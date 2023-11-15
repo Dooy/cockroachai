@@ -7,4 +7,16 @@ services:
       - "9000:9000"
     volumes:
       - ./config:/app/config
+  chat2api:
+    image: ydlhero/chatui:chat2api
+    restart: always
+    environment:
+      TZ: Asia/Shanghai # 指定时区
+      OPENAI_API_KEY: Aa112211
+      OPENAI_API_BASE_URL: https://beta.note123.net
+      C2API_SERVER: https://www.openai-hk.com
+      C2API_BASE_URL: http://172.17.0.1:9000
+      API_ENTRY: chat2api
+    ports:
+      - "6041:3002"
   
