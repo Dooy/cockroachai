@@ -1,0 +1,11 @@
+version: '3'
+services:
+  chatpoint:
+    image: ydlhero/chatpoint:latest
+    restart: always
+    environment:
+      TZ: Asia/Shanghai # 指定时区
+    ports:
+      - "8091:8091" #chat.openai.com
+      - "8092:8092" #demo.xyhelper.cn
+      - "8099:8099" #api.openai.com
