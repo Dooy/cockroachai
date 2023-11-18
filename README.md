@@ -23,7 +23,7 @@
 1.克隆本仓库
 
 ```bash
-git clone https://github.com/cockroachai/cockroachai.git
+git clone https://github.com/dooy/cockroachai.git
 ```
 
 2.进入目录
