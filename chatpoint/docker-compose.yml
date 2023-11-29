@@ -9,5 +9,4 @@ services:
       - "8091:8091" #chat.openai.com
       - "8092:8092" #真的接入点
       - "8099:8099" #api.openai.com
-    volumes:
-      - ./config:/usr/local/etc/haproxy:ro
+    
