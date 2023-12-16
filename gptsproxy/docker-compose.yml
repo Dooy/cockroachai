@@ -6,9 +6,7 @@ services:
     environment:
       TZ: Asia/Shanghai # 指定时区
     ports:
-      - "6001:6001" #管理端口
-      - "6000:6000" #管理端口
-      - "443:443" #https
-      - "80:80" #  http
+      - "6028:6001" #管理端口
+      - "3800:6000" #业务端口 
     volumes:
       - ./config:/usr/local/etc/haproxy:ro
