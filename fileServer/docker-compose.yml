@@ -20,5 +20,5 @@ services:
       #- ./certs:/app/certs
       - ./conf.d:/etc/nginx/conf.d
     ports:
-      - "4443:4443"
+      - "4443:443"
   
