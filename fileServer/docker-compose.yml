@@ -7,7 +7,7 @@ services:
       TZ: Asia/Shanghai # 指定时区
       SERVER_NAME: https://file.openai-hk.com:4443
     ports:
-      - "3112:3102"
+      - "3102:3102"
     volumes:
       - /data/uploads:/app/uploads
   openresty:
