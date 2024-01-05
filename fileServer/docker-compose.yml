@@ -17,7 +17,7 @@ services:
       TZ: Asia/Shanghai # 指定时区
     volumes:
       - /data/uploads:/data/uploads
-      - ./certs:/app/certs
+      #- ./certs:/app/certs
       - ./conf.d:/etc/nginx/conf.d
     ports:
       - "4443:4443"
