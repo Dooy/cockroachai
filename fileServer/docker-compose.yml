@@ -6,6 +6,7 @@ services:
     environment:
       TZ: Asia/Shanghai # 指定时区
       SERVER_NAME: https://file.openai-hk.com:4443
+      #SERVER_NAME: https://file.openai-hk.com:4443
     ports:
       - "3102:3102"
     volumes:

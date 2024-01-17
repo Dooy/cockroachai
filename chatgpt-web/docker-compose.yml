@@ -1,0 +1,17 @@
+version: '3'
+services:
+  gptweb:
+    image: ydlhero/chatgpt-web-midjourney-proxy:latest
+    restart: always
+    environment:
+      TZ: Asia/Shanghai # 指定时区
+      OPENAI_API_KEY: hk-xxxxxx
+      OPENAI_API_BASE_URL: https://api.openai-hk.com
+      MJ_SERVER: https://api.openai-hk.com
+      MJ_API_SECRET: hk-xxxxxx
+      API_UPLOADER: 1
+      AUTH_SECRET_KEY: mi123456
+    ports:
+      - "6080:3002" #外网端口6080
+    volumes:
+      - /data/mj_uploads:/app/uploads 
