@@ -7,14 +7,14 @@ services:
     restart: unless-stopped
     environment:
       - TZ=Asia/Shanghai
-      - PROXIES=socks5://warp:10000
+      # - PROXIES=socks5://warp:10000
     command: run  --disable-webui --arkose-solver=yescaptcha --arkose-solver-key=2beaeaeb43e7dddfec1a64922e1fa4fcbb8ea2a831961
     ports:
       - "7999:7999"
-    depends_on:
-      - warp
+  #   depends_on:
+  #     - warp
 
-  warp:
-    container_name: warp
-    image: ghcr.io/gngpp/warp:latest
-    restart: unless-stopped
+  # warp:
+  #   container_name: warp
+  #   image: ghcr.io/gngpp/warp:latest
+  #   restart: unless-stopped
