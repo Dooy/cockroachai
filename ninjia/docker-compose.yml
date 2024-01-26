@@ -11,8 +11,8 @@ services:
     command: run
     ports:
       - "7999:7999"
-    depends_on:
-      - warp
+    # depends_on:
+    #   - warp
 
   # warp:
   #   container_name: warp
