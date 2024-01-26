@@ -12,6 +12,9 @@ services:
     #command: run  --disable-webui --arkose-solver=yescaptcha --arkose-solver-key=2beaeaeb43e7dddfec1a64922e1fa4fcbb8ea2a831961
     ports:
       - "7999:7999"
+    volumes:
+      - "./har/gpt3:/root/.gpt3"
+      - "./har/gpt4:/root/.gpt4"
   #   depends_on:
   #     - warp
 
