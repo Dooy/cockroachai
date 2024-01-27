@@ -13,8 +13,8 @@ services:
     ports:
       - "7999:7999"
     volumes:
-      - "./har/gpt3:/root/.gpt3"
-      - "./har/gpt4:/root/.gpt4"
+      - "./har/gpt3:/root/.ninja/gpt3"
+      - "./har/gpt4:/root/.ninja/gpt4"
       - "./har/auth:/root/.ninja/auth"
   #   depends_on:
   #     - warp
