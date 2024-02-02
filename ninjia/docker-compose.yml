@@ -17,6 +17,8 @@ services:
       - "./har/gpt3:/root/.ninja/gpt3"
       - "./har/gpt4:/root/.ninja/gpt4"
       - "./har/auth:/root/.ninja/auth"
+      - "./har/platform:/root/.ninja/platform"
+      - "./har/signup:/root/.ninja/signup"
   #   depends_on:
   #     - warp
 
