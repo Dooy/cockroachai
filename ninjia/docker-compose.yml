@@ -7,7 +7,7 @@ services:
     restart: unless-stopped
     environment:
       - TZ=Asia/Shanghai
-      - PROXIES=socks5://43.159.29.44:20177,socks5://43.159.29.44:20062
+      - PROXIES=socks5://43.159.29.44:20177
       #- PROXIES=all|http://43.159.29.44:20177
       
     command: run -L info --arkose-solver=yescaptcha --arkose-solver-key=2beaeaeb43e7dddfec1a64922e1fa4fcbb8ea2a831961 --no-keepalive
