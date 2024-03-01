@@ -8,7 +8,7 @@ services:
     environment:
       - TZ=Asia/Shanghai
       #- PROXIES=http://107.181.187.120:10075,http://107.181.187.120:10076,http://107.181.187.120:10077,http://107.181.187.120:10078,http://107.181.187.120:10079,http://107.181.187.120:10111,http://107.181.187.120:10112,http://107.181.187.120:10113,http://107.181.187.120:10114,http://107.181.187.120:10115
-      #- PROXIES=socks5://43.159.29.44:20177
+      - PROXIES=socks5://43.159.29.44:20177
       #- PROXIES=all|http://43.159.29.44:20177 
       
     command: run -L info --arkose-solver=yescaptcha --arkose-solver-key=2beaeaeb43e7dddfec1a64922e1fa4fcbb8ea2a831961 
