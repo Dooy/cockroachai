@@ -11,7 +11,7 @@ services:
       #- PROXIES=socks5://43.159.29.44:20177
       #- PROXIES=http://192.168.31.187:7890
       
-    command: run -L info --arkose-solver=yescaptcha --arkose-solver-key=2beaeaeb43e7dddfec1a64922e1fa4fcbb8ea2a831961  --enable-arkose-proxy --no-keepalive
+    command: run -L info --arkose-solver=yescaptcha --arkose-solver-key=2beaeaeb43e7dddfec1a64922e1fa4fcbb8ea2a831961  --enable-arkose-proxy # --no-keepalive 如果是只做arkose 可以不开启 这样更不消耗验证码
     ports:
       - "7999:7999"
     volumes:
