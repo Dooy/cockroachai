@@ -8,11 +8,12 @@ services:
     environment:
       - TZ=Asia/Shanghai
       - PROXIES=${PROXIES}
+      - ARKOSE_SOLVER_KEY=${ARKOSE_SOLVER_KEY}
       #- PROXIES=http://107.181.187.120:10075,http://107.181.187.120:10076,http://107.181.187.120:10077,http://107.181.187.120:10078,http://107.181.187.120:10079,http://107.181.187.120:10111,http://107.181.187.120:10112,http://107.181.187.120:10113,http://107.181.187.120:10114,http://107.181.187.120:10115,http://ydlhero:arL83DY2cu@107.181.187.120:10075,http://ydlhero:arL83DY2cu@107.181.187.120:10076,http://ydlhero:arL83DY2cu@107.181.187.120:10077,http://ydlhero:arL83DY2cu@107.181.187.120:10078,http://ydlhero:arL83DY2cu@107.181.187.120:10079,http://ydlhero:arL83DY2cu@107.181.187.120:10111,http://ydlhero:arL83DY2cu@107.181.187.120:10112,http://ydlhero:arL83DY2cu@107.181.187.120:10113,http://ydlhero:arL83DY2cu@107.181.187.120:10114,http://ydlhero:arL83DY2cu@107.181.187.120:10115,http://ydlhero:arL83DY2cu@107.181.161.133:10075,http://ydlhero:arL83DY2cu@107.181.161.133:10076,http://ydlhero:arL83DY2cu@107.181.161.133:10077,http://ydlhero:arL83DY2cu@107.181.161.133:10078,http://ydlhero:arL83DY2cu@107.181.161.133:10079,http://ydlhero:arL83DY2cu@107.181.161.133:10160,http://ydlhero:arL83DY2cu@107.181.161.133:10161,http://ydlhero:arL83DY2cu@107.181.161.133:10162,http://ydlhero:arL83DY2cu@107.181.161.133:10163,http://ydlhero:arL83DY2cu@107.181.161.133:10164
       #- PROXIES=socks5://43.159.29.44:20177
       #- PROXIES=http://192.168.31.187:7890
       
-    command: run -L info --arkose-solver=yescaptcha --arkose-solver-key=2beaeaeb43e7dddfec1a64922e1fa4fcbb8ea2a831961  --enable-arkose-proxy # --no-keepalive 如果是只做arkose 可以不开启 这样更不消耗验证码
+    command: run -L info --arkose-solver=yescaptcha  --enable-arkose-proxy # --no-keepalive 如果是只做arkose 可以不开启 这样更不消耗验证码
     ports:
       - "7999:7999"
     volumes:
