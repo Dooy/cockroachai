@@ -15,7 +15,7 @@ services:
       - "7999:7999"
     volumes:
       - "~/.ninja:/root/.ninja"
-      - "~/aimg:/aimg"
+      - "./aimg:/aimg"
     depends_on:
       - fcsrv
   fcsrv:
