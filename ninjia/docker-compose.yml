@@ -8,26 +8,20 @@ services:
     environment:
       - TZ=Asia/Shanghai
       - PROXIES=${PROXIES}
-      - ENABLE_ARKOSE_PROXY=true
-      #- PROXIES=http://107.181.187.120:10075,http://107.181.187.120:10076,http://107.181.187.120:10077,http://107.181.187.120:10078,http://107.181.187.120:10079,http://107.181.187.120:10111,http://107.181.187.120:10112,http://107.181.187.120:10113,http://107.181.187.120:10114,http://107.181.187.120:10115,http://ydlhero:arL83DY2cu@107.181.187.120:10075,http://ydlhero:arL83DY2cu@107.181.187.120:10076,http://ydlhero:arL83DY2cu@107.181.187.120:10077,http://ydlhero:arL83DY2cu@107.181.187.120:10078,http://ydlhero:arL83DY2cu@107.181.187.120:10079,http://ydlhero:arL83DY2cu@107.181.187.120:10111,http://ydlhero:arL83DY2cu@107.181.187.120:10112,http://ydlhero:arL83DY2cu@107.181.187.120:10113,http://ydlhero:arL83DY2cu@107.181.187.120:10114,http://ydlhero:arL83DY2cu@107.181.187.120:10115,http://ydlhero:arL83DY2cu@107.181.161.133:10075,http://ydlhero:arL83DY2cu@107.181.161.133:10076,http://ydlhero:arL83DY2cu@107.181.161.133:10077,http://ydlhero:arL83DY2cu@107.181.161.133:10078,http://ydlhero:arL83DY2cu@107.181.161.133:10079,http://ydlhero:arL83DY2cu@107.181.161.133:10160,http://ydlhero:arL83DY2cu@107.181.161.133:10161,http://ydlhero:arL83DY2cu@107.181.161.133:10162,http://ydlhero:arL83DY2cu@107.181.161.133:10163,http://ydlhero:arL83DY2cu@107.181.161.133:10164
-      #- PROXIES=socks5://43.159.29.44:20177
-      #- PROXIES=http://192.168.31.187:7890
-      
+      - ENABLE_ARKOSE_PROXY=true  
     command: run -L info --arkose-solver=yescaptcha --arkose-solver-key=${ARKOSE_SOLVER_KEY} # --no-keepalive 如果是只做arkose 可以不开启 这样更不消耗验证码
     ports:
       - "7999:7999"
     volumes:
       - "~/.ninja:/root/.ninja"
-      # - "./har/gpt3:/root/.ninja/gpt3"
-      # - "./har/gpt4:/root/.ninja/gpt4"
-      # - "./har/auth:/root/.ninja/auth"
-      # - "./har/platform:/root/.ninja/platform"
-      # - "./har/signup:/root/.ninja/signup"
-  #   depends_on:
-  #     - warp
-
-  # warp:
-  #   container_name: warp
-  #   image: ghcr.io/gngpp/warp:latest
-  #   restart: unless-stopped
-  #command: run  --disable-webui --arkose-solver=yescaptcha --arkose-solver-key=2beaeaeb43e7dddfec1a64922e1fa4fcbb8ea2a831961
+  fcsrv:
+    image: ghcr.io/gngpp/fcsrv:latest
+    container_name: fcsrv
+    restart: unless-stopped
+    environment:
+      - TZ=Asia/Shanghai
+    command: run --model-dir /models
+    ports:
+      - "8000:8000"
+    volumes:
+      - "./models:/models"
