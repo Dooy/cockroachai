@@ -16,16 +16,16 @@ services:
     volumes:
       - "~/.ninja:/root/.ninja"
       - "./aimg:/aimg"
-    depends_on:
-      - fcsrv
-  fcsrv:
-    image: ghcr.io/gngpp/fcsrv:latest
-    container_name: fcsrv
-    restart: unless-stopped
-    environment:
-      - TZ=Asia/Shanghai
-    command: run --model-dir /models -A my-arkose-fcsrv
-    ports:
-      - "8000:8000"
-    volumes:
-      - "./models:/models"
+  #   depends_on:
+  #     - fcsrv
+  # fcsrv:
+  #   image: ghcr.io/gngpp/fcsrv:latest
+  #   container_name: fcsrv
+  #   restart: unless-stopped
+  #   environment:
+  #     - TZ=Asia/Shanghai
+  #   command: run --model-dir /models -A my-arkose-fcsrv
+  #   ports:
+  #     - "8000:8000"
+  #   volumes:
+  #     - "./models:/models"
