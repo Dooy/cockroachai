@@ -14,6 +14,8 @@ services:
       - "7999:7999"
     volumes:
       - "~/.ninja:/root/.ninja"
+    depends_on:
+      - fcsrv
   fcsrv:
     image: ghcr.io/gngpp/fcsrv:latest
     container_name: fcsrv
