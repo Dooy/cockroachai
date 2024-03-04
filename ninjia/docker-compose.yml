@@ -9,8 +9,8 @@ services:
       - TZ=Asia/Shanghai
       - PROXIES=${PROXIES}
       - ENABLE_ARKOSE_PROXY=true  
-    command: run -L info --arkose-solver fcsrv --arkose-solver-key my-arkose-fcsrv --arkose-solver-endpoint http://107.173.244.51:8000/task  --no-keepalive  --arkose-solver-image-dir /aimg # ${ARKOSE_SOLVER_KEY} --no-keepalive 如果是只做arkose 可以不开启 这样更不消耗验证码
-    #command: run -L info --arkose-solver=yescaptcha --arkose-solver-key=${ARKOSE_SOLVER_KEY}  --no-keepalive  # ${ARKOSE_SOLVER_KEY} --no-keepalive 如果是只做arkose 可以不开启 这样更不消耗验证码
+    #command: run -L info --arkose-solver fcsrv --arkose-solver-key my-arkose-fcsrv --arkose-solver-endpoint http://107.173.244.51:8000/task  --no-keepalive  --arkose-solver-image-dir /aimg # ${ARKOSE_SOLVER_KEY} --no-keepalive 如果是只做arkose 可以不开启 这样更不消耗验证码
+    command: run -L info --arkose-solver=yescaptcha --arkose-solver-key=${ARKOSE_SOLVER_KEY}  --no-keepalive  # ${ARKOSE_SOLVER_KEY} --no-keepalive 如果是只做arkose 可以不开启 这样更不消耗验证码
     ports:
       - "7999:7999"
     volumes:
