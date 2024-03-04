@@ -9,7 +9,7 @@ services:
       - TZ=Asia/Shanghai
       - PROXIES=${PROXIES}
       - ENABLE_ARKOSE_PROXY=true  
-    command: run -L info --arkose-solver=yescaptcha --arkose-solver-key=${ARKOSE_SOLVER_KEY} # --no-keepalive 如果是只做arkose 可以不开启 这样更不消耗验证码
+    command: run -L info --arkose-solver fcsrv --arkose-solver-key my-arkose-fcsrv --arkose-solver-endpoint http://fcsrv:8000 # ${ARKOSE_SOLVER_KEY} --no-keepalive 如果是只做arkose 可以不开启 这样更不消耗验证码
     ports:
       - "7999:7999"
     volumes:
@@ -20,7 +20,7 @@ services:
     restart: unless-stopped
     environment:
       - TZ=Asia/Shanghai
-    command: run --model-dir /models
+    command: run --model-dir /models -A my-arkose-fcsrv
     ports:
       - "8000:8000"
     volumes:
