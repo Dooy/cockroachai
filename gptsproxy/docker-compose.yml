@@ -8,5 +8,7 @@ services:
     ports:
       - "6028:6001" #管理端口
       - "3800:6000" #业务端口 
+      - "6022:6022" #ssh n3
+      - "6023:6023" #ssh n5 
     volumes:
       - ./config:/usr/local/etc/haproxy:ro
