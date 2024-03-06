@@ -10,5 +10,6 @@ services:
       - "3800:6000" #业务端口 
       - "6022:6022" #ssh n3
       - "6023:6023" #ssh n5 
+      - "6021:6021" #ssh n2
     volumes:
       - ./config:/usr/local/etc/haproxy:ro
