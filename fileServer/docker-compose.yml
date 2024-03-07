@@ -22,4 +22,6 @@ services:
       - ./conf.d:/etc/nginx/conf.d
     ports:
       - "4443:443"
+      - "5443:5443" # api.openai.com
+      - "6443:6443" # api.anthropic.com
   
