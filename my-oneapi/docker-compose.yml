@@ -6,6 +6,6 @@ services:
     environment:
       TZ: Asia/Shanghai # 指定时区
     ports:
-      - "6026:3000" #管理端口
+      - "7026:3000" #管理端口
     volumes:
       - ./one-api:/data #root cikuutest!
