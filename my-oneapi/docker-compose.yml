@@ -8,4 +8,4 @@ services:
     ports:
       - "7026:3000" #管理端口
     volumes:
-      - ./one-api:/data #root cikuutest!
+      - ./one-api:/data 
