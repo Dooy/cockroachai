@@ -11,7 +11,7 @@ services:
       MJ_API_SECRET: abc123456
       TJ_BAIDU_ID: 9d5fa7fc2f5fd585aa8fd3010d19be1e
     ports:
-      - "8016:3002" #管理端口
+      - "8015:3002" #管理端口
   
   ddcici:
     image: ydlhero/chatgpt-web-midjourney-proxy:latest 
@@ -24,4 +24,4 @@ services:
       MJ_API_SECRET: abc123456
       TJ_BAIDU_ID: 9d5fa7fc2f5fd585aa8fd3010d19be1e
     ports:
-      - "2016:3002" #管理端口
+      - "2015:3002" #管理端口
