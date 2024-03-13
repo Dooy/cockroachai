@@ -26,3 +26,13 @@ services:
       TJ_BAIDU_ID: 9d5fa7fc2f5fd585aa8fd3010d19be1e
     ports:
       - "2015:3002" #管理端口
+
+  uptime-kuma:
+    image: louislam/uptime-kuma:latest
+    restart: unless-stopped
+    environment:
+      TZ: Asia/Shanghai # 指定时区
+    ports:
+      - "6076:3001" #管理端口
+    volumes:
+      - "./uptime-kuma:/app/data"
