@@ -33,6 +33,6 @@ services:
     environment:
       TZ: Asia/Shanghai # 指定时区
     ports:
-      - "6076:3001" #管理端口
+      - "7076:3001" #管理端口
     volumes:
       - "./uptime-kuma:/app/data"
