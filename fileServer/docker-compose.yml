@@ -24,4 +24,5 @@ services:
       - "4443:443"
       - "5443:5443" # api.openai.com
       - "6443:6443" # api.anthropic.com
+      - "7027:7027" # gpts2
   
