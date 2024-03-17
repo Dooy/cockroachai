@@ -9,3 +9,12 @@ services:
       - "7026:3000" #管理端口
     volumes:
       - ./one-api:/data 
+  gpts2:
+    image: ydlhero/myone:latest
+    restart: always
+    environment:
+      TZ: Asia/Shanghai # 指定时区
+    ports:
+      - "7027:3000" #管理端口
+    volumes:
+      - ./gpts2:/data 
