@@ -5,6 +5,7 @@ services:
     restart: always
     environment:
       TZ: Asia/Shanghai # 指定时区
+      SERVER_TYPE: master #主服务器
     ports:
       - "7026:3000" #管理端口
     volumes:
@@ -17,4 +18,4 @@ services:
     ports:
       - "7027:3000" #管理端口
     volumes:
-      - ./gpts2:/data 
+      - ./gpts2:/data #SERVER_TYPE
