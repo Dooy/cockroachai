@@ -11,8 +11,8 @@ services:
       MJ_API_SECRET: abc123456
       TJ_BAIDU_ID: 9d5fa7fc2f5fd585aa8fd3010d19be1e
       SYS_NOTIFY: "<div style='text-align: left'>1.本站仅支持GPT-3.5序列<br>2.如果您需要使用GPTs,GPT-4,midjourney画图等模型 可以点击<a href='https://www.openai-hk.com/docs/openai/api-key.html' target='_blank' style='color:Red ;text-decoration: underline'>这里获取apiKey</a> <br>3.如何切换模型，可以点击<a href='https://docs.qq.com/doc/DTXVZTVdQckVTTG13' target='_blank' style='color:#4b9e5f ;text-decoration: underline'>这里使用帮助</div>"
-      # TURNSTILE_SITE: 0x4AAAAAAAVOQiP6eh3vOjeJ
-      # TURNSTILE_SECRET_KEY: 0x4AAAAAAAVOQujn0yxvkh2g30I4aMIthwE
+      TURNSTILE_SITE: 0x4AAAAAAAVOQiP6eh3vOjeJ
+      TURNSTILE_SECRET_KEY: 0x4AAAAAAAVOQujn0yxvkh2g30I4aMIthwE
     ports:
       - "8015:3002" #管理端口
   addmao-test:
