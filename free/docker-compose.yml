@@ -25,7 +25,7 @@ services:
       MJ_SERVER: https://api.openai.com
       MJ_API_SECRET: abc123456
       TJ_BAIDU_ID: 9d5fa7fc2f5fd585aa8fd3010d19be1e
-      SYS_NOTIFY: "<div style='text-align: left'>1.Этот сайт поддерживает только последовательности GPT-3.5<br>2.Если вам нужно использовать GPT, GPT-4, midjourney drawing и другие модели, вы можете нажать <a href='https://www.openai-hk.com/docs/openai/api-key.html' target='_blank' style='color:Red ;text-decoration: underline'>Получите apiKey здесь.</a> <br>3.Чтобы не заблудиться, добавьте в закладки наш сайт <a href='https://ru.addmao.com' target='_blank' style='color:#4b9e5f ;text-decoration: underline'>ru.addmao.com</div>"
+      SYS_NOTIFY: "<div style='text-align: left'>1.Этот сайт поддерживает только последовательности GPT-3.5<br>2.Если вам нужно использовать GPTs, GPT-4, midjourney и другие модели, вы можете нажать <a href='https://www.openai-hk.com/docs/openai/api-key.html' target='_blank' style='color:Red ;text-decoration: underline'>Получите apiKey здесь.</a> <br>3.Чтобы не заблудиться, добавьте в закладки наш сайт <a href='https://ru.addmao.com' target='_blank' style='color:#4b9e5f ;text-decoration: underline'>ru.addmao.com</div>"
       TURNSTILE_SITE: 0x4AAAAAAAVOQiP6eh3vOjeJ
       TURNSTILE_SECRET_KEY: 0x4AAAAAAAVOQujn0yxvkh2g30I4aMIthwE 
     ports:
