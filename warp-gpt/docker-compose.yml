@@ -5,7 +5,7 @@ services:
     restart: unless-stopped
     environment:
       TZ: Asia/Shanghai
-      proxy: "http://43.159.29.44:20340"
+      proxy: "http://ydlhero:arL83DY2cu@195.123.232.19:16546"
       port: 6050
       host: "0.0.0.0" 
       verify: false
