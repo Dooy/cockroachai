@@ -14,6 +14,7 @@ services:
     command: run -L info --arkose-solver=yescaptcha -I=safari17_2_1 --arkose-solver-key=${ARKOSE_SOLVER_KEY} ${OTHER} # ${ARKOSE_SOLVER_KEY} --no-keepalive 如果是只做arkose 可以不开启 这样更不消耗验证码
     ports:
       - "7999:7999"
+      - "6079:7999"
     volumes:
       - "~/.ninja:/root/.ninja"
       - "./aimg:/aimg"
