@@ -1,0 +1,25 @@
+version: '3'
+services:
+  ninja:
+    image: hts999/warp-gpt:latest
+    restart: unless-stopped
+    environment:
+      TZ: Asia/Shanghai
+      proxy: "http://ydlhero:arL83DY2cu@195.123.232.19:16546"
+      port: 6050
+      host: "0.0.0.0" 
+      verify: false
+      auth_key: ""
+      arkose_must: false
+      openai_host: "chat.openai.com"
+      openai_api_host: "api.openai.com"
+      proxy_pool_url: ""
+      log_level: "debug"
+      redis_address: "127.0.0.1:6379"
+      redis_passwd: ""
+      redis_db: 0
+    ports:
+      - "6050:6050"
+
+
+
