@@ -1,6 +1,6 @@
 version: '3'
 services:
-  ninja:
+  warp:
     image: hts999/warp-gpt:latest
     restart: unless-stopped
     environment:
