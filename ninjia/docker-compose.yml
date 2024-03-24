@@ -11,7 +11,7 @@ services:
       - PROXIES=${PROXIES}
       - ENABLE_ARKOSE_PROXY=true
     #command: run -L info --arkose-solver fcsrv --arkose-solver-key my-arkose-fcsrv --arkose-solver-endpoint http://107.173.244.51:8000/task  --arkose-solver-image-dir /aimg # ${ARKOSE_SOLVER_KEY} --no-keepalive 如果是只做arkose 可以不开启 这样更不消耗验证码
-    command: run -L info  --enable-webui --endpoint tcr9i.ccaiai.com -t --arkose-solver=yescaptcha -I=safari17_2_1 --arkose-solver-key=${ARKOSE_SOLVER_KEY} ${OTHER} # ${ARKOSE_SOLVER_KEY} --no-keepalive 如果是只做arkose 可以不开启 这样更不消耗验证码
+    command: run -L info  --enable-webui --endpoint 43.154.119.189:6079 --arkose-solver=yescaptcha -I=safari17_2_1 --arkose-solver-key=${ARKOSE_SOLVER_KEY} ${OTHER} # ${ARKOSE_SOLVER_KEY} --no-keepalive 如果是只做arkose 可以不开启 这样更不消耗验证码
     ports:
       - "7999:7999"
       - "6079:7999"
