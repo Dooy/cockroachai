@@ -5,7 +5,7 @@ services:
     restart: always
     environment:
       TZ: Asia/Shanghai # 指定时区
-      SERVER_TYPE: master #主服务器
+      #SERVER_TYPE: master #主服务器
     ports:
       - "7026:3000" #管理端口
     volumes:
