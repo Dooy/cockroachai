@@ -4,7 +4,8 @@ services:
     image: ydlhero/myone:latest
     restart: always
     environment:
-      TZ: Asia/Shanghai # 指定时区
+      - TZ=Asia/Shanghai # 指定时区
+      - SQL_DSN=root:tool2024@tcp(172.17.0.1:3306)/oneapi_my
       #SERVER_TYPE: master #主服务器
     ports:
       - "7026:3000" #管理端口
