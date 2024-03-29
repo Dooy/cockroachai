@@ -64,6 +64,18 @@ services:
       PER: "3h" # 限制周期 1s, 1m, 1h, 1d, 1w, 1y
     labels:
       - "com.centurylinklabs.watchtower.scope=xyhelper-chatgpt-share-server"
+
+  openresty:
+    image: openresty/openresty:latest
+    restart: always
+    container_name: vip-openresty
+    environment:
+      TZ: Asia/Shanghai # 指定时区
+    volumes:
+      - ./conf.d:/etc/nginx/conf.d
+      - ./conf.d/app:/usr/local/openresty/nginx/conf/app
+    ports:
+      - "80:80" #免费
 #  watchtower:
 #    image: containrrr/watchtower
 #    volumes:
