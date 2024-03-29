@@ -68,7 +68,7 @@ services:
   openresty:
     image: openresty/openresty:latest
     restart: always
-    container_name: vip-openresty
+    #container_name: share-openresty
     environment:
       TZ: Asia/Shanghai # 指定时区
     volumes:
