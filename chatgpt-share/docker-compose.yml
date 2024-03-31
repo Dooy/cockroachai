@@ -74,6 +74,7 @@ services:
     volumes:
       - ./conf.d:/etc/nginx/conf.d
       - ./conf.d/app:/usr/local/openresty/nginx/conf/app
+      - ./list:/app/resource/public/list
     ports:
       - "80:80" #免费
 #  watchtower:
