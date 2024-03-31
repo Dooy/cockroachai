@@ -7,3 +7,4 @@ git pull
 mv dist ../list
 cd ..
 chmod -R 755 list
+rm -rf sharelist
