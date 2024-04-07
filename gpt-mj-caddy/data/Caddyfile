@@ -1,14 +1,4 @@
-http:// {
-  # 根目录，指向所有静态文件的根目录
-  # 这里设置为 `/usr/share/caddy`
-  root * /srv
-
-  # 启用 gzip 压缩
-  encode gzip
-
-  # 启用文件服务器功能
-  file_server
-}
+#域名缓存你自己的域名就好
 gptmj2.kakafa.net {
   #reverse_proxy you-ip:6080
   reverse_proxy http://gptweb:3002
