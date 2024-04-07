@@ -9,7 +9,7 @@ http:// {
   # 启用文件服务器功能
   file_server
 }
-gptmj.kakafa.net {
+gptmj2.kakafa.net {
   reverse_proxy 107.173.244.51:6080
   tls dooy520@qq.com
 } 
