@@ -10,6 +10,7 @@ http:// {
   file_server
 }
 gptmj2.kakafa.net {
-  reverse_proxy 107.173.244.51:6080
+  #reverse_proxy 107.173.244.51:6080
+  reverse_proxy http://gptweb:3002
   tls dooy520@qq.com
 } 
