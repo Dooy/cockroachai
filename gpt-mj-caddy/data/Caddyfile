@@ -1,3 +1,14 @@
+http:// {
+  # 根目录，指向所有静态文件的根目录
+  # 这里设置为 `/usr/share/caddy`
+  root * /srv
+
+  # 启用 gzip 压缩
+  encode gzip
+
+  # 启用文件服务器功能
+  file_server
+}
 gptmj.htgpts.com {
   reverse_proxy 107.173.244.51:6080
 }
