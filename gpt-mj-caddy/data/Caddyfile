@@ -11,4 +11,5 @@ http:// {
 }
 gptmj.htgpts.com {
   reverse_proxy 107.173.244.51:6080
+  tls dooy520@qq.com
 }
