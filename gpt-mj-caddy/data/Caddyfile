@@ -1,0 +1,3 @@
+gptmj.htgpts.com {
+  reverse_proxy 107.173.244.51:6080
+}
