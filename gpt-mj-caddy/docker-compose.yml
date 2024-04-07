@@ -25,7 +25,8 @@ services:
     image: caddy:latest
     restart: always
     ports:
-      - "80:80"
+      #如果不需要ssl 域名服务直接把2个端口注释掉
+      - "80:80" 
       - "443:443"
     volumes:
       - ./data/Caddyfile:/etc/caddy/Caddyfile
