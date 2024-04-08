@@ -13,8 +13,8 @@ services:
       MYSQL_DATABASE: "cool" # 业务库名
       MYSQL_USER: "cool" # 业务库用户名
       MYSQL_PASSWORD: "123123" # 业务库密码
- #   ports:
- #       - 6036:3306 
+    ports:
+       - 3306:3306 
   redis:
     image: redis
     restart: always
