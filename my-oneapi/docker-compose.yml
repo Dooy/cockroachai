@@ -1,4 +1,3 @@
-version: '3'
 services:
   myone:
     image: ydlhero/myone:20240327113551
