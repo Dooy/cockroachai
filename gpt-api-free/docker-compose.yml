@@ -3,11 +3,14 @@ services:
     image: ghcr.io/aurora-develop/aurora:latest
     container_name: aurora
     restart: unless-stopped
+    environment:
+      TZ: Asia/Shanghai # 指定时区
+      PROXY_URL: {$PROXY_URL}
     ports:
       - '7080:8080'  
   haproxy:
     image: haproxytech/haproxy-alpine:2.4
-    restart: always
+    restart: unless-stopped
     environment:
       TZ: Asia/Shanghai # 指定时区
     ports:
