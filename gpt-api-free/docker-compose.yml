@@ -16,5 +16,6 @@ services:
     ports:
       - "7001:6001" #管理端口
       - "7000:6000" #业务端口
+      - "5999:5999" #业务端口
     volumes:
       - ./config:/usr/local/etc/haproxy:ro
