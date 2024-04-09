@@ -4,4 +4,4 @@ services:
     container_name: aurora
     restart: unless-stopped
     ports:
-      - '8080:8080'
+      - '7080:8080' 
