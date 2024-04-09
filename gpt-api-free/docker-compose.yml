@@ -5,7 +5,7 @@ services:
     restart: unless-stopped
     environment:
       TZ: Asia/Shanghai # 指定时区
-      PROXY_URL: {$PROXY_URL}
+      PROXY_URL: ${PROXY_URL}
     ports:
       - '7080:8080'  
   haproxy:
