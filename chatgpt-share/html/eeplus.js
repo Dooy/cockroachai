@@ -36,7 +36,7 @@ $(function () {
       "border-bottom-left-radius": "34px",
       background: "linear-gradient(103.91deg, #9B51E0 21.01%, rgba(48, 129, 237, 0.8) 100%)",
       height: "34px",
-      width: "73px",
+      width: "45px",
       margin: "1px",
       display: "flex",
       "align-items": "center",
@@ -46,7 +46,7 @@ $(function () {
       cursor: "pointer",
     });
 
-    $cz.html( "<span style='color:white;font-size:15px;margin-left:10px'>充值续费</span>" );
+    $cz.html( "<span style='color:white;font-size:15px;margin-left:10px'>充值</span>" );
     $("body").append($cz);
     $cz.click(function () {
       window.location.href = "/chongzhi";
