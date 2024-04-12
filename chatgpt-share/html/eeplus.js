@@ -46,9 +46,7 @@ $(function () {
       cursor: "pointer",
     });
 
-    $cz.html(
-      "<span style='color:white;font-size:15px;margin-left:10px'>充值</span>"
-    );
+    $cz.html( "<span style='color:white;font-size:15px;margin-left:10px'>充值</span>" );
     $("body").append($cz);
     $cz.click(function () {
       window.location.href = "/chongzhi";
