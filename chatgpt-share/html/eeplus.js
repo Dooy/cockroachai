@@ -36,7 +36,7 @@ $(function () {
       "border-bottom-left-radius": "34px",
       background: "linear-gradient(103.91deg, #9B51E0 21.01%, rgba(48, 129, 237, 0.8) 100%)",
       height: "34px",
-      width: "80px",
+      width: "73px",
       margin: "1px",
       display: "flex",
       "align-items": "center",
