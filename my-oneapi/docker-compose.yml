@@ -10,8 +10,8 @@ services:
       - "7026:3000" #管理端口
     volumes:
       - ./one-api:/data 
-  gpts2: #gpt2.ccaiai.com
-    image: ydlhero/myone:latest
+  gpts2: #gpt2.ccaiai.com 支持 suno ，channels 需要单独处理； ALTER TABLE `channels` CHANGE `key` `key` VARCHAR(1024) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL;
+    image: ydlhero/myone:20240410120632
     restart: always
     environment:
       #TZ: Asia/Shanghai # 指定时区
