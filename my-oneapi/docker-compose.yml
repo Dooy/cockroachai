@@ -1,6 +1,7 @@
 services:
   myone:
-    image: ydlhero/myone:20240327113551
+    image: ydlhero/myone:latest
+    #image: ydlhero/myone:20240327113551
     restart: always
     environment:
       - TZ=Asia/Shanghai # 指定时区
