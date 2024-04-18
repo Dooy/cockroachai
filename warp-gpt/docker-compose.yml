@@ -5,7 +5,7 @@ services:
     restart: unless-stopped
     environment:
       TZ: Asia/Shanghai
-      proxy: "http://43.159.28.112:8810"
+      proxy: ${PROXY_URL}
       port: 6050
       host: "0.0.0.0" 
       verify: false
@@ -20,6 +20,17 @@ services:
       redis_db: 0
     ports:
       - "6050:6050"
+  ja3-proxy:
+    image: xyhelper/ja3-proxy
+    ports:
+      - "16524:16524"
+      - "9988:9988"
+    environment:
+      WEBSITE_URL: "https://chat.openai.com/auth/login" # 要过盾的目标网站
+      PROXY: ${PROXY_URL} # 代理服务器信息
+      CLIENTKEY: ${CLIENT_KEY} # yescaptcha 的 clientKey
+      LOCALPROXYUSER: "自行设置一个用户名" # ja3代理服务用户名
+      LOCALPROXYPASS: "自行设置一个密码" # ja3代理服务密码
 
 
 
