@@ -20,7 +20,7 @@ services:
       redis_db: 0
     ports:
       - "6050:6050"
-  ja3-proxy:
+  ja3proxy:
     image: xyhelper/ja3-proxy
     ports:
       - "16524:16524"
