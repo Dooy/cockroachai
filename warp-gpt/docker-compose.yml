@@ -27,7 +27,7 @@ services:
       - "7988:9988"
     environment:
       WEBSITE_URL: "https://chat.openai.com/auth/login" # 要过盾的目标网站
-      #PROXY: ${PROXY_URL} # 代理服务器信息 
+      PROXY: ${JA3_PROXY_URL} # 代理服务器信息 
       CLIENTKEY: ${CLIENT_KEY} # yescaptcha 的 clientKey
       LOCALPROXYUSER: ${LOCALPROXY_USER} # ja3代理服务用户名
       LOCALPROXYPASS: ${LOCALPROXY_PASS} # ja3代理服务密码
