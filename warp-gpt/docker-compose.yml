@@ -24,13 +24,13 @@ services:
     image: xyhelper/ja3-proxy
     ports:
       - "16524:16524"
-      - "9988:9988"
+      - "7988:9988"
     environment:
       WEBSITE_URL: "https://chat.openai.com/auth/login" # 要过盾的目标网站
       PROXY: ${PROXY_URL} # 代理服务器信息
       CLIENTKEY: ${CLIENT_KEY} # yescaptcha 的 clientKey
-      LOCALPROXYUSER: "自行设置一个用户名" # ja3代理服务用户名
-      LOCALPROXYPASS: "自行设置一个密码" # ja3代理服务密码
+      LOCALPROXYUSER: ${LOCALPROXY_USER} # ja3代理服务用户名
+      LOCALPROXYPASS: ${LOCALPROXY_PASS} # ja3代理服务密码
 
 
 
