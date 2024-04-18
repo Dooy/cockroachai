@@ -50,7 +50,7 @@ services:
       TZ: Asia/Shanghai # 指定时区
       # 接入网关地址#"https://demo.xyhelper.cn"
       CHATPROXY: ${MYCHATPROXY} 
-      LOGINPROXY: ${CHATPROXY} 
+      LOGINPROXY: ${LOGINPROXY} 
       # 接入网关的authkey
       AUTHKEY: "xyhelper"
       # 内容审核及速率限制
