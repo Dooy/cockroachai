@@ -25,9 +25,9 @@ services:
     restart: unless-stopped
     environment:
       TZ: Asia/Shanghai # 指定时区
-    ports:
-      - "7101:6001" #管理端口
-      - "7100:6000" #业务端口
+    # ports:
+    #   - "7101:6001" #管理端口
+    #   - "7100:6000" #业务端口
       # - "5999:5999" #业务端口
     volumes:
       - ./config:/usr/local/etc/haproxy:ro
