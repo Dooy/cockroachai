@@ -1,0 +1,15 @@
+services:
+ openresty:
+    image: openresty/openresty:latest
+    restart: always
+    #container_name: share-openresty
+    environment:
+      TZ: Asia/Shanghai # 指定时区
+    volumes:
+      - ./conf.d:/etc/nginx/conf.d
+      - ./conf.d/app:/usr/local/openresty/nginx/conf/app
+      - ./html:/usr/local/openresty/nginx/html
+      - /data/ssl:/data/ssl
+    ports:
+      - "80:80" #免费
+      - "443:443" #ssl
