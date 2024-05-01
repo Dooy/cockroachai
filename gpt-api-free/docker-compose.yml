@@ -28,7 +28,7 @@ services:
       - '5005:5005'
     environment:
       #- AUTHORIZATION=your_first_token, your_second_token
-      - AUTHORIZATION=DOYfM6rvIg8-XRlGckYbLdqPYAXXztrQusfWYLi9g8Eic
+      - AUTHORIZATION=bwNRsHqiAsarHpXx-2qO22OpJ57xCIQUJUH19VgQ32Wkl
 #      - CHATGPT_BASE_URL=https://chat.openai.com
 #      - HISTORY_DISABLED=true
 #      - PROXY_URL=your_first_proxy, your_second_proxy
