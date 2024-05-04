@@ -30,7 +30,7 @@ services:
       - 7032:8001 #管理端口 添加账号 http://ip:7032/xyhelper
     environment:
       TZ: Asia/Shanghai # 指定时区
-      CHATPROXY: "https://demo.xyhelper.cn"  # 接入网关地址
+      CHATPROXY: ${LOGINPROXY}  # 接入网关地址
       AUTHKEY: "xyhelper"
     volumes:
       - ./data/chatgpt-api-server/:/app/data/
@@ -45,9 +45,11 @@ services:
     environment:
       TZ: Asia/Shanghai # 指定时区
       CHATPROXY: "http://172.17.0.1:7999" # 业务ninja接入网关地址 
-      LOGINPROXY: "https://demo.xyhelper.cn" # 账号登录用到xy的 ninjia没符合 applogin 的接口 接入网关地址 
+      LOGINPROXY: ${LOGINPROXY} # 账号登录用到xy的 ninjia没符合 applogin 的接口 接入网关地址 
       AUTHKEY: "xyhelper"
       PLUSN: 1  #plus账后不多复用轮训 如果账号多就不要去起这个了
+      OAIAPI: "https://api.oaifree.com"
+      CHAT2API: ${CHAT2API}
       #ALLSSE: 1
       #IGNORE_CONTENT_LENGTH: "yes" #3.5 会超过8k阶段
     volumes:
