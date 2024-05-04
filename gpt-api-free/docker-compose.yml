@@ -30,7 +30,7 @@ services:
       #- AUTHORIZATION=your_first_token, your_second_token
 #      - CHATGPT_BASE_URL=https://chat.openai.com
 #      - HISTORY_DISABLED=true
-#      - PROXY_URL=your_first_proxy, your_second_proxy
+      - PROXY_URL=${PROXY_URL2}
       - ARKOSE_TOKEN_URL=http://arkose:5006/token
 #      - RETRY_TIMES=3
   arkose:
