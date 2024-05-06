@@ -46,7 +46,7 @@ services:
 #      - HISTORY_DISABLED=true
       #- PROXY_URL=${PROXY_URL4}
       - ARKOSE_TOKEN_URL=http://arkose:5006/token
-      - RETRY_TIMES=1
+      - RETRY_TIMES=1 
       - TZ=Asia/Shanghai # 指定时区
 
   arkose:
