@@ -21,7 +21,7 @@ services:
     ports:
       - "8091:8091" #chatgpt.com
       - "8092:8092" #真的接入点
-      - "8099:8099" #api.openai.com
-      - "8100:8100" #https://generativelanguage.googleapis.com
+      - "8099:8099" # https://generativelanguage.googleapis.com
+      - "8100:8100" # api.openai.com
       - "8101:8101" #https://oaifree
     
