@@ -49,7 +49,7 @@ services:
       LOGINPROXY: ${LOGINPROXY} # 账号登录用到xy的 ninjia没符合 applogin 的接口 接入网关地址 
       AUTHKEY: "xyhelper"
       PLUSN: 1  #plus账后不多复用轮训 如果账号多就不要去起这个了
-      OAIAPI: "https://api.oaifree.com"
+      OAIAPI: ${OAIAPI}
       CHAT2API: ${CHAT2API}
       #ALLSSE: 1
       #IGNORE_CONTENT_LENGTH: "yes" #3.5 会超过8k阶段
