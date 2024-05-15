@@ -51,6 +51,7 @@ services:
       PLUSN: 1  #plus账后不多复用轮训 如果账号多就不要去起这个了
       OAIAPI: ${OAIAPI}
       CHAT2API: ${CHAT2API}
+      CHAT2APIBK: ${CHAT2APIBK} #直接供给给gpt-4o的
       #ALLSSE: 1
       #IGNORE_CONTENT_LENGTH: "yes" #3.5 会超过8k阶段
     volumes:
