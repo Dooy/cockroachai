@@ -48,7 +48,8 @@ services:
       CHATPROXY: "http://172.17.0.1:7999" # 业务ninja接入网关地址 
       LOGINPROXY: ${LOGINPROXY} # 账号登录用到xy的 ninjia没符合 applogin 的接口 接入网关地址 
       AUTHKEY: "xyhelper"
-      PLUSN: 1  #plus账后不多复用轮训 如果账号多就不要去起这个了
+      PLUSN: 0  #plus账后不多复用轮训 如果账号多就不要去起这个了
+      ISGPT4O: 1  #将普号的GPT4o 也算plus
       OAIAPI: ${OAIAPI}
       CHAT2API: ${CHAT2API}
       CHAT2APIBK: ${CHAT2APIBK} #直接供给给gpt-4o的
