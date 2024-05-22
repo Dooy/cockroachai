@@ -12,5 +12,6 @@ services:
       - "6023:6023" #ssh n5 
       - "6021:6021" #ssh n2
       - "6024:6024" #windows
+      - "6025:6025" # ipv4 proxy
     volumes:
       - ./config:/usr/local/etc/haproxy:ro
