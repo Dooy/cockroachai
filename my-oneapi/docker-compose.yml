@@ -23,7 +23,7 @@ services:
     volumes:
       - ./gpts2:/data #SERVER_TYPE
   newapi:
-    image: ccalciumion/new-api:latest
+    image: calciumion/new-api:latest
     restart: always
     environment:
       - SQL_DSN=root:123456@tcp(172.17.0.1:3360)/newapi
