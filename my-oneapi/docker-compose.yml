@@ -22,3 +22,13 @@ services:
       - "7027:3000" #管理端口
     volumes:
       - ./gpts2:/data #SERVER_TYPE
+  newapi:
+    image: ccalciumion/new-api:latest
+    restart: always
+    environment:
+      - SQL_DSN=root:123456@tcp(172.17.0.1:3360)/newapi
+      - TZ=Asia/Shanghai
+    ports:
+      - "7028:3000" #管理端口
+    volumes:
+      - ./newapi:/data 
