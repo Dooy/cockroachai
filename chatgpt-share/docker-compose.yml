@@ -84,6 +84,7 @@ services:
       - ./html:/usr/local/openresty/nginx/html
     ports:
       - "80:80" #免费
+      - "4080:4080"  
 #  watchtower:
 #    image: containrrr/watchtower
 #    volumes:
