@@ -32,3 +32,13 @@ services:
       - "7028:3000" #管理端口
     volumes:
       - ./newapi:/data 
+  mynewapi:
+    image: ydlhero/mynewone:latest
+    restart: always
+    environment:
+      - SQL_DSN=root:123456@tcp(172.17.0.1:3360)/newapi
+      - TZ=Asia/Shanghai
+    ports:
+      - "7029:3000" #管理端口
+    volumes:
+      - ./mynewapi:/data 
