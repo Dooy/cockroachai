@@ -1,0 +1,11 @@
+services:
+  lumaapi:
+    image: lumaapi/luma-api:latest
+    container_name: luma-api
+    restart: always
+    ports:
+      - "6048:8000"
+    volumes:
+      - ./logs:/logs
+    env_file:
+      - .env
