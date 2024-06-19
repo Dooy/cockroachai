@@ -2,7 +2,7 @@ services:
   lumaapi:
     image: lumaapi/luma-api:latest
     container_name: luma-api
-    restart: always
+    restart: unless-stopped
     ports:
       - "6048:8000"
     volumes:
