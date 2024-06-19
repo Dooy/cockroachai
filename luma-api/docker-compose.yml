@@ -4,7 +4,7 @@ services:
     container_name: luma-api
     restart: unless-stopped
     ports:
-      - "6048:8000"
+      - "7748:8000"
     volumes:
       - ./logs:/logs
     env_file:
