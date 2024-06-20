@@ -55,6 +55,7 @@ services:
       CHAT2APIBK: ${CHAT2APIBK} #直接供给给gpt-4o的
       #ALLSSE: 1
       #IGNORE_CONTENT_LENGTH: "yes" #3.5 会超过8k阶段
+      DISABLE_TOLAST: "1" #关闭到最后一个错误的地方
     volumes:
       - ./data/chatgpt-api-server-my/:/app/data/
     labels:
