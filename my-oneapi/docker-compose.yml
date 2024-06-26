@@ -22,16 +22,16 @@ services:
       - "7027:3000" #管理端口
     volumes:
       - ./gpts2:/data #SERVER_TYPE
-  newapi:
-    image: calciumion/new-api:latest
-    restart: always
-    environment:
-      - SQL_DSN=root:123456@tcp(172.17.0.1:3360)/newapi
-      - TZ=Asia/Shanghai
-    ports:
-      - "7028:3000" #管理端口
-    volumes:
-      - ./newapi:/data 
+  # newapi:
+  #   image: calciumion/new-api:latest
+  #   restart: always
+  #   environment:
+  #     - SQL_DSN=root:123456@tcp(172.17.0.1:3360)/newapi
+  #     - TZ=Asia/Shanghai
+  #   ports:
+  #     - "7028:3000" #管理端口
+  #   volumes:
+  #     - ./newapi:/data 
   mynewapi:
     image: ydlhero/mynewone:latest
     restart: always
@@ -42,3 +42,13 @@ services:
       - "7029:3000" #管理端口
     volumes:
       - ./mynewapi:/data 
+  lumaapi:
+    image: ydlhero/mynewone:latest
+    restart: always
+    environment:
+      - SQL_DSN=root:123456@tcp(172.17.0.1:3360)/lumaapi
+      - TZ=Asia/Shanghai
+    ports:
+      - "7030:3000" #管理端口
+    volumes:
+      - ./lumaapi:/data 
