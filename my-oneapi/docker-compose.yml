@@ -52,3 +52,13 @@ services:
       - "7030:3000" #管理端口
     volumes:
       - ./lumaapi:/data 
+  ephone:
+    image: calciumion/new-api:latest
+    restart: always
+    environment:
+      - SQL_DSN=root:123456@tcp(172.17.0.1:3360)/ephone
+      - TZ=Asia/Shanghai
+    ports:
+      - "7031:3000" #管理端口
+    volumes:
+      - ./ephone:/data 
