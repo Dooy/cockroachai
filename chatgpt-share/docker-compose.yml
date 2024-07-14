@@ -36,7 +36,7 @@ services:
       CHATPROXY: ${CHATPROXY}
       # 接入网关的authkey
       AUTHKEY: "xyhelper"
-      ASSET_PREFIX: "https://static.aitutu.cc"
+      # ASSET_PREFIX: "https://static.aitutu.cc"
       # 内容审核及速率限制
       #AUDIT_LIMIT_URL: "http://auditlimit:8080/audit_limit"
       OAUTH_URL: "https://www.aidutu.cn/hetao/share/auth"
