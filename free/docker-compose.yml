@@ -33,7 +33,6 @@ services:
   #     #TURNSTILE_NO_CHECK: 1
   #   ports:
   #     - "8016:3002" #管理端口
-
   next-web:
     profiles: [ "no-proxy" ]
     container_name: next-web
