@@ -34,7 +34,15 @@ services:
   #   ports:
   #     - "8016:3002" #管理端口
 
-  
+  next-web:
+    profiles: [ "no-proxy" ]
+    container_name: next-web
+    image: yidadaa/chatgpt-next-web
+    ports:
+      - 6043:3000
+    environment:
+      TZ: Asia/Shanghai # 指定时区
+      ENABLE_BALANCE_QUERY: 1
   ddcici:
     image: ydlhero/chatgpt-web-midjourney-proxy:latest 
     restart: unless-stopped
