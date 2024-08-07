@@ -11,7 +11,7 @@ services:
       MJ_API_SECRET: abc123456
       TJ_BAIDU_ID: 9d5fa7fc2f5fd585aa8fd3010d19be1e
       VISION_MODEL: gpt-4o
-      SYS_NOTIFY: "<div style='text-align: left'>1.近日有不法分子利用本站进行行骗，故先暂停本站服务<br>2.本站仅是一个纯公益站点；若有人收款使用请报警你的收款方<br>3.请收藏本站地址 <a href='https://free.addmao.com' target='_blank' style='color:#4b9e5f ;text-decoration: underline'>free.addmao.com</div>"
+      SYS_NOTIFY: "<div style='text-align: left'>1.近日有不法分子利用本站行骗，故先暂停本站服务<br>2.本站仅是一个纯公益站点；若有人收款使用请报警你的收款方<br>3.请收藏本站地址 <a href='https://free.addmao.com' target='_blank' style='color:#4b9e5f ;text-decoration: underline'>free.addmao.com</div>"
       # TURNSTILE_SITE: 0x4AAAAAAAVOQiP6eh3vOjeJ
       # TURNSTILE_SECRET_KEY: 0x4AAAAAAAVOQujn0yxvkh2g30I4aMIthwE
       #TURNSTILE_NO_CHECK: 1
