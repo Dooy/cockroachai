@@ -23,5 +23,6 @@ services:
       - "8092:8092" #真的接入点
       - "8099:8099" # https://generativelanguage.googleapis.com
       - "8100:8100" # api.openai.com
-      - "8101:8101" #https://oaifree
+      - "8101:8101" # https://oaifree
+      - "8199:8199" # https://ideogram.ai
     
