@@ -25,4 +25,6 @@ services:
       - "5443:5443" # api.openai.com
       - "6443:6443" # api.anthropic.com
       - "7027:7027" # gpts2
+      - "6688:6688" # cdn.dis
+      - "${POORT80}:80" # cdn.dis
   
