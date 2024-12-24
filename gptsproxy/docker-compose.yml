@@ -14,5 +14,6 @@ services:
       - "6024:6024" #windows
       - "6025:6025" # ipv4 proxy
       - "6088:6088" # github.com 22
+      - "9200-9299:9200-9299"
     volumes:
       - ./config:/usr/local/etc/haproxy:ro
