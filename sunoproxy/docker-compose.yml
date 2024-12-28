@@ -1,6 +1,6 @@
 services:
   cf:
-    image: d.addmao.com/hts999/ninja-suno:latest
+    image: hts999/ninja-suno:latest
     restart: always
     command: ["rev", "run", "/config.yaml"]
     volumes:
