@@ -33,7 +33,8 @@ services:
   #   volumes:
   #     - ./newapi:/data 
   mynewapi:
-    image: ydlhero/mynewone:latest
+    #image: ydlhero/mynewone:latest
+    image: ydlhero/mynewone:20250224211431
     restart: always
     environment:
       - SQL_DSN=root:123456@tcp(172.17.0.1:3360)/newapi
@@ -43,7 +44,8 @@ services:
     volumes:
       - ./mynewapi:/data 
   lumaapi:
-    image: ydlhero/mynewone:latest
+    #image: ydlhero/mynewone:latest
+    image: ydlhero/mynewone:20250224211431
     restart: always
     environment:
       - SQL_DSN=root:123456@tcp(172.17.0.1:3360)/lumaapi
