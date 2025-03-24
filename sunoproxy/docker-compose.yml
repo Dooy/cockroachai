@@ -7,3 +7,12 @@ services:
       - ./config.yaml:/config.yaml
     ports:
       - "9999:9999"
+  socks5:
+    image: xkuma/socks5
+    restart: always
+    ports:
+      - "1080:1080"
+    environment:
+      - PROXY_USER=suno
+      - PROXY_PASSWORD=Aa112211
+      - PROXY_SERVER=0.0.0.0:1080
