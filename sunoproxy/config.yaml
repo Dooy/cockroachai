@@ -1,5 +1,5 @@
 debug: false
 bind: "0.0.0.0:9999"
 concurrent: 1024
-timeout: 20
+timeout: 60
 idle: 60
