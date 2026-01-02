@@ -20,6 +20,13 @@ source "$VENV_PATH"
 # 使用 pkill 匹配包含特定端口和名称的进程
 pkill -f "mitmdump.*-p $PORT" && echo "清理旧进程..."
 
+echo "正在获取公网 IP..."
+PUBLIC_IP=$(curl -s myip.ipip.net | grep -oE "([0-9]{1,3}\.){3}[0-9]{1,3}" | head -n 1)
+
+if [ -z "$PUBLIC_IP" ]; then
+    PUBLIC_IP="[无法获取公网IP，请手动检查]"
+fi
+
 # 4. 启动程序
 echo "正在后台启动 mitmdump (端口: $PORT, 用户: suno)..."
 nohup mitmdump \
@@ -37,7 +44,7 @@ PID=$(pgrep -f "mitmdump.*-p $PORT")
 if [ -n "$PID" ]; then
     echo "✅ 启动成功！"
     echo "进程 PID: $PID"
-    echo "代理地址: http://$USER_AUTH@your_ip:$PORT"
+    echo "代理地址: http://$USER_AUTH@$PUBLIC_IP:$PORT"
 else
     echo "❌ 启动失败，请检查端口 $PORT 是否被占用或 Python 环境是否正常。"
 fi
