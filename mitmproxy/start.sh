@@ -4,6 +4,7 @@
 VENV_PATH="./mitm/bin/activate"
 PORT=8080
 USER_AUTH="suno:Aa112211"
+SCRIPT_NAME="./modify.py"
 # 如果有特定域名需求，可以把上面提到的 ignore-hosts 加上，目前此脚本为全量代理
 
 # 1. 检查虚拟环境
@@ -22,6 +23,7 @@ pkill -f "mitmdump.*-p $PORT" && echo "清理旧进程..."
 # 4. 启动程序
 echo "正在后台启动 mitmdump (端口: $PORT, 用户: suno)..."
 nohup mitmdump \
+    -s "$SCRIPT_NAME" \
     --set listen_host=0.0.0.0 \
     -p $PORT \
     --set block_global=false \
