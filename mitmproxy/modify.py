@@ -27,7 +27,9 @@ def request(flow: http.HTTPFlow):
         return  # 既然已经 Mock 返回了，就不再走后面的转发逻辑
 
     # 逻辑 2: 转发特定请求到另一个服务器
-    if flow.request.method == "POST" and "studio-api.prod.suno.com/api/generate/v2-web/" in flow.request.url:
+    # if flow.request.method == "POST" and "studio-api.prod.suno.com/api/generate/v2-web/" in flow.request.url:
+    target_prefix = "/api/generate/v2"
+    if flow.request.method == "POST" and flow.request.path.startswith(target_prefix):
         # 修改目标地址
         flow.request.url = "https://hc.open-hk.com/test/proxyman/push"
         # 如果目标服务器需要正确的 Host 头，可以取消下面这一行的注释
