@@ -37,7 +37,7 @@ nohup mitmdump \
     -p $PORT \
     --set block_global=false \
     --set flow_detail=0 \
-    --authentication "$USER_AUTH" \
+    --proxyauth "$USER_AUTH" \
     > /dev/null 2>&1 &
 
 # 5. 验证是否启动成功
