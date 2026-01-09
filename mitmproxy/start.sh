@@ -27,7 +27,7 @@ if [ -z "$PUBLIC_IP" ]; then
     PUBLIC_IP="[无法获取公网IP，请手动检查]"
 fi
 
-# 4. 启动程序 > /dev/null 2>&1 &
+# 4. 启动程序 > /dev/null 2>&1 & --proxyauth "$USER_AUTH" \
 echo "正在后台启动 mitmdump (端口: $PORT, 用户: suno)..."
 nohup mitmdump \
     -s "$SCRIPT_NAME" \
@@ -35,7 +35,7 @@ nohup mitmdump \
     -p $PORT \
     --set block_global=false \
     --set flow_detail=0 \
-    --proxyauth "$USER_AUTH" \
+    --set authentication "$USER_AUTH" \
     > /dev/null 2>&1 &
 
 # 5. 验证是否启动成功
