@@ -36,7 +36,7 @@ nohup mitmdump \
     --mode socks5@8081 \
     --set block_global=false \
     --set flow_detail=0 \
-    --ignore-hosts '^(?!studio-api\.prod\.suno\.com)' \
+    --ignore-hosts "^(?!studio-api\.prod\.suno\.com)" \
     --set authentication "$USER_AUTH" \
     > /dev/null 2>&1 &
 
