@@ -28,6 +28,8 @@ if [ -z "$PUBLIC_IP" ]; then
 fi
 
 # 4. 启动程序
+
+## authentication --proxyauth "$USER_AUTH" \
 echo "正在后台启动 mitmdump (端口: $PORT, 用户: suno)..."
 nohup mitmdump \
     -s "$SCRIPT_NAME" \
@@ -35,7 +37,7 @@ nohup mitmdump \
     -p $PORT \
     --set block_global=false \
     --set flow_detail=0 \
-    --proxyauth "$USER_AUTH" \
+    --authentication "$USER_AUTH" \
     > /dev/null 2>&1 &
 
 # 5. 验证是否启动成功
