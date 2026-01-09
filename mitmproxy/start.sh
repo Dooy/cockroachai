@@ -28,8 +28,6 @@ if [ -z "$PUBLIC_IP" ]; then
 fi
 
 # 4. 启动程序
-
-## authentication --proxyauth "$USER_AUTH" \
 echo "正在后台启动 mitmdump (端口: $PORT, 用户: suno)..."
 nohup mitmdump \
     -s "$SCRIPT_NAME" \
@@ -47,7 +45,7 @@ if [ -n "$PID" ]; then
     echo "✅ 启动成功！"
     echo "进程 PID: $PID"
     echo "代理地址: http://$USER_AUTH@$PUBLIC_IP:$PORT"
-    echo "内网代理: http://$USER_AUTH@127.0.0.1:$PORT"
+    echo "内网代理地址: http://$USER_AUTH@127.0.0.1:$PORT"
 else
     echo "❌ 启动失败，请检查端口 $PORT 是否被占用或 Python 环境是否正常。"
 fi
