@@ -28,6 +28,7 @@ if [ -z "$PUBLIC_IP" ]; then
 fi
 
 # 4. 启动程序 > /dev/null 2>&1 & --proxyauth "$USER_AUTH" \
+#--ignore-hosts "^(?!studio-api\.prod\.suno\.com)" \
 echo "正在后台启动 mitmdump (端口: $PORT, 用户: suno)..."
 nohup mitmdump \
     -s "$SCRIPT_NAME" \
@@ -36,7 +37,7 @@ nohup mitmdump \
     --mode socks5@8081 \
     --set block_global=false \
     --set flow_detail=0 \
-    --ignore-hosts "^(?!studio-api\.prod\.suno\.com)" \
+    --allow-hosts "studio-api\.prod\.suno\.com" \
     --set authentication "$USER_AUTH" \
     > /dev/null 2>&1 &
 
