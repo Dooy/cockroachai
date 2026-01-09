@@ -32,7 +32,8 @@ echo "正在后台启动 mitmdump (端口: $PORT, 用户: suno)..."
 nohup mitmdump \
     -s "$SCRIPT_NAME" \
     --set listen_host=0.0.0.0 \
-    -p $PORT \
+    --mode regular@$PORT \
+    --mode socks5@8081 \
     --set block_global=false \
     --set flow_detail=0 \
     --set authentication "$USER_AUTH" \
