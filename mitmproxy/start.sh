@@ -36,7 +36,7 @@ nohup mitmdump \
     --set block_global=false \
     --set flow_detail=0 \
     --proxyauth "$USER_AUTH" \
-    > ./mitm.log &
+    > /dev/null 2>&1 &
 
 # 5. 验证是否启动成功
 sleep 2
