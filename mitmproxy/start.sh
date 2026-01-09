@@ -18,7 +18,7 @@ source "$VENV_PATH"
 
 # 3. 清理已存在的 mitmdump 进程 (避免端口占用)
 # 使用 pkill 匹配包含特定端口和名称的进程
-pkill -f "mitmdump.* $PORT" && echo "清理旧进程..."
+pkill -f "mitmdump.*@$PORT" && echo "清理旧进程..."
 
 echo "正在获取公网 IP..."
 PUBLIC_IP=$(curl -s myip.ipip.net | grep -oE "([0-9]{1,3}\.){3}[0-9]{1,3}" | head -n 1)
@@ -41,7 +41,7 @@ nohup mitmdump \
 
 # 5. 验证是否启动成功
 sleep 2
-PID=$(pgrep -f "mitmdump.*-p $PORT")
+PID=$(pgrep -f "mitmdump.*@$PORT")
 if [ -n "$PID" ]; then
     echo "✅ 启动成功！"
     echo "进程 PID: $PID"
