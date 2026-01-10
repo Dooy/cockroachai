@@ -59,9 +59,9 @@ PID=$(pgrep -f "mitmdump.*$PORT")
 if [ -n "$PID" ]; then
     echo "✅ 启动成功！"
     echo "进程 PID: $PID"
-    echo "代理地址: http://$USER_AUTH@$PUBLIC_IP:$PORT"
+    #echo "代理地址: http://$USER_AUTH@$PUBLIC_IP:$PORT"
     echo "代理地址: socks5://$USER_AUTH@$PUBLIC_IP:8081"
-    echo "内网代理地址: http://$USER_AUTH@127.0.0.1:$PORT"
+    echo "内网代理地址: socks5://$USER_AUTH@127.0.0.1:$PORT"
 else
     echo "❌ 启动失败，请检查端口 $PORT 是否被占用或 Python 环境是否正常。"
 fi
