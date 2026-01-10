@@ -32,21 +32,21 @@ fi
 #--ignore-hosts "^(?!studio-api\.prod\.suno\.com)" \
 #--ignore-hosts "^(?!suno)" \
 echo "正在后台启动 mitmdump (端口: $PORT, 用户: suno)..."
-# nohup mitmdump \
-#     -s "$SCRIPT_NAME" \
-#     --set listen_host=0.0.0.0 \
-#     --mode regular@$PORT \
-#     --mode socks5@8081 \
-#     --set block_global=false \
-#     --set flow_detail=0 \
-#     --set stream_large_bodies=2m \
-#     --set authentication "$USER_AUTH" \
-#     > /dev/null 2>&1 &
+nohup mitmdump \
+    -s "$SCRIPT_NAME" \
+    --set listen_host=0.0.0.0 \
+    --mode regular@$PORT \
+    --mode socks5@8081 \
+    --set block_global=false \
+    --set flow_detail=0 \
+    --set stream_large_bodies=2m \
+    --set authentication "$USER_AUTH" \
+    > /dev/null 2>&1 &
 nohup mitmdump -s "$SCRIPT_NAME" --mode socks5 \
     --set listen_host=0.0.0.0 \
     --listen-port $PORT \
     --set block_global=false \
-    --proxyauth suno:Aa112211 \
+    --set authentication "$USER_AUTH" \
     --set stream_large_bodies=1m \
     --set connection_strategy=lazy \
     --set http2=false \
