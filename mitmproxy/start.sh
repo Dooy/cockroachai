@@ -38,7 +38,7 @@ nohup mitmdump \
     --set block_global=false \
     --set flow_detail=0 \
     --set stream_large_bodies=2m \
-    --ignore-hosts "^(?!studio-api\.prod\.suno\.com|mitm\.it)" \
+    --ignore-hosts "^(?!suno)" \
     --set authentication "$USER_AUTH" \
     > /dev/null 2>&1 &
 
