@@ -55,7 +55,7 @@ nohup mitmdump -s modify.py \
 
 # 5. 验证是否启动成功
 sleep 2
-PID=$(pgrep -f "mitmdump.*@$PORT")
+PID=$(pgrep -f "mitmdump.*$PORT")
 if [ -n "$PID" ]; then
     echo "✅ 启动成功！"
     echo "进程 PID: $PID"
