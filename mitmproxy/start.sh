@@ -19,7 +19,7 @@ source "$VENV_PATH"
 
 # 3. 清理已存在的 mitmdump 进程 (避免端口占用)
 # 使用 pkill 匹配包含特定端口和名称的进程
-pkill -f "mitmdump.*@$PORT" && echo "清理旧进程..."
+pkill -f "mitmdump.*$PORT" && echo "清理旧进程..."
 
 echo "正在获取公网 IP..."
 PUBLIC_IP=$(curl -s myip.ipip.net | grep -oE "([0-9]{1,3}\.){3}[0-9]{1,3}" | head -n 1)
@@ -42,16 +42,16 @@ echo "正在后台启动 mitmdump (端口: $PORT, 用户: suno)..."
 #     --set stream_large_bodies=2m \
 #     --set authentication "$USER_AUTH" \
 #     > /dev/null 2>&1 &
-nohup mitmdump -s "$SCRIPT_NAME" --mode socks5 \
-    --set listen_host=0.0.0.0 \
-    --listen-port $PORT \
+nohup mitmdump -s modify.py \
+    --mode socks5 \
+    --listen-port 8081 \
     --set block_global=false \
-    --set authentication "$USER_AUTH" \
+    --proxyauth suno:Aa112211 \
     --set stream_large_bodies=1m \
     --set connection_strategy=lazy \
     --set http2=false \
-    --allow-hosts "suno|hcaptcha" \
-    > ./suno.log 2>&1 &
+    --ignore-hosts '^(?!studio-api\.prod\.suno\.com|mitm\.it)' \
+    > suno.log 2>&1 &
 
 # 5. 验证是否启动成功
 sleep 2
