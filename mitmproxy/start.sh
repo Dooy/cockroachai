@@ -2,7 +2,8 @@
 
 # --- 配置信息 ---
 VENV_PATH="./mitm/bin/activate"
-PORT=8080
+# PORT=8080
+PORT=8081
 USER_AUTH="suno:Aa112211"
 SCRIPT_NAME="./modify.py"
 # 如果有特定域名需求，可以把上面提到的 ignore-hosts 加上，目前此脚本为全量代理
@@ -31,16 +32,26 @@ fi
 #--ignore-hosts "^(?!studio-api\.prod\.suno\.com)" \
 #--ignore-hosts "^(?!suno)" \
 echo "正在后台启动 mitmdump (端口: $PORT, 用户: suno)..."
-nohup mitmdump \
-    -s "$SCRIPT_NAME" \
+# nohup mitmdump \
+#     -s "$SCRIPT_NAME" \
+#     --set listen_host=0.0.0.0 \
+#     --mode regular@$PORT \
+#     --mode socks5@8081 \
+#     --set block_global=false \
+#     --set flow_detail=0 \
+#     --set stream_large_bodies=2m \
+#     --set authentication "$USER_AUTH" \
+#     > /dev/null 2>&1 &
+nohup mitmdump -s "$SCRIPT_NAME" --mode socks5 \
     --set listen_host=0.0.0.0 \
-    --mode regular@$PORT \
-    --mode socks5@8081 \
+    --listen-port $PORT \
     --set block_global=false \
-    --set flow_detail=0 \
-    --set stream_large_bodies=2m \
-    --set authentication "$USER_AUTH" \
-    > /dev/null 2>&1 &
+    --proxyauth suno:Aa112211 \
+    --set stream_large_bodies=1m \
+    --set connection_strategy=lazy \
+    --set http2=false \
+    --allow-hosts "suno|hcaptcha" \
+    > ./suno.log 2>&1 &
 
 # 5. 验证是否启动成功
 sleep 2
