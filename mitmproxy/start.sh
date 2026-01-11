@@ -42,6 +42,18 @@ echo "正在后台启动 mitmdump (端口: $PORT, 用户: suno)..."
 #     --set stream_large_bodies=2m \
 #     --set authentication "$USER_AUTH" \
 #     > /dev/null 2>&1 &
+
+#nohup mitmdump -s modify.py \
+#    --mode socks5 \
+#    --listen-port 8081 \
+#    --set block_global=false \
+#    --proxyauth suno:Aa112211 \
+#    --set stream_large_bodies=1m \
+#    --set connection_strategy=lazy \
+#    --set http2=false \
+#    --ignore-hosts '^(?!studio-api\.prod\.suno\.com|mitm\.it)' \
+#    > suno.log 2>&1 &
+
 nohup mitmdump -s modify.py \
     --mode socks5 \
     --listen-port 8081 \
@@ -52,7 +64,7 @@ nohup mitmdump -s modify.py \
     --set http2=false \
     --ignore-hosts '^(?!studio-api\.prod\.suno\.com|mitm\.it)' \
     > suno.log 2>&1 &
-
+    
 # 5. 验证是否启动成功
 sleep 2
 PID=$(pgrep -f "mitmdump.*$PORT")
