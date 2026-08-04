@@ -16,3 +16,14 @@ services:
       - PROXY_USER=suno
       - PROXY_PASSWORD=Aa112211
       - PROXY_SERVER=0.0.0.0:1080
+  haproxy:
+    image: haproxytech/haproxy-alpine:2.4
+    restart: always
+    environment:
+      TZ: Asia/Shanghai # 指定时区
+    ports:
+      - "8404:8404" #管理端口
+      - "30005:30005" #端口
+      - "30006:30006" #端口
+    volumes:
+      - ./config:/usr/local/etc/haproxy:ro
