@@ -8,3 +8,5 @@ services:
       TZ: Asia/Shanghai # 指定时区
     ports:
       - "9022:9011" #管理端口
+    volumes:
+      - ./log/supervisor:/var/log/supervisor
