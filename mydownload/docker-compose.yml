@@ -19,7 +19,7 @@ services:
       - "443:443"
     volumes:
       - ./config/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./config/real.suno.day.conf:/etc/nginx/conf.d/real.suno.day.conf:ro
+      - ./config/real.com.conf:/etc/nginx/conf.d/real.com.conf:ro
       - ./config/fullchain.pem:/etc/nginx/ssl/fullchain.pem:ro
       - ./config/privkey.pem:/etc/nginx/ssl/privkey.pem:ro
       - ./log/nginx:/var/log/nginx
