@@ -8,6 +8,7 @@ services:
       TZ: Asia/Shanghai # 指定时区
     ports:
       - "9022:9011" #管理端口
+      - "3001:3001" #audio 现场生成
     volumes:
       - ./log/supervisor:/var/log/supervisor
 
