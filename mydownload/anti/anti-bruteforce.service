@@ -4,7 +4,7 @@ After=network.target iptables.service
 
 [Service]
 Type=simple
-ExecStart=/path/to/mydownload/anti/anti-bruteforce.sh monitor
+ExecStart=/data/app/cockroachai/mydownload/anti/anti-bruteforce.sh monitor
 Restart=always
 RestartSec=10
 StandardOutput=journal
