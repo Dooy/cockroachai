@@ -1,0 +1,18 @@
+[Unit]
+Description=Anti Brute Force Protection Service
+After=network.target iptables.service
+
+[Service]
+Type=simple
+ExecStart=/path/to/mydownload/anti/anti-bruteforce.sh monitor
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+
+# 安全加固
+NoNewPrivileges=false
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
