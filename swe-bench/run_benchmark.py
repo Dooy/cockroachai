@@ -71,27 +71,24 @@ class SWEBenchRunner:
         base_commit = task.get("base_commit", "")
         hints_text = task.get("hints_text", "")
 
-        prompt = f"""You are an expert software engineer. Fix this bug in {repo}.
+        prompt = f"""Generate a git patch to fix this bug. Output ONLY the patch in standard unified diff format.
 
-**Problem:**
+Repository: {repo}
+Base Commit: {base_commit}
+
+Problem:
 {problem_statement}
 
-**Repository:** {repo}
-**Base Commit:** {base_commit}
-{f"**Hints:** {hints_text}" if hints_text else ""}
+{f"Hints: {hints_text}" if hints_text else ""}
 
-Generate a git patch in unified diff format. Output MUST start with "diff --git" and follow standard git diff format.
+Requirements:
+1. Your ENTIRE response must be a valid git patch
+2. Start with: diff --git a/path/to/file b/path/to/file
+3. Include proper diff headers (index, ---, +++, @@)
+4. NO explanations, NO markdown, NO commentary
+5. ONLY the raw patch text
 
-Example format:
-diff --git a/file.py b/file.py
-index abc123..def456 100644
---- a/file.py
-+++ b/file.py
-@@ -10,7 +10,7 @@ def example():
--    old line
-+    new line
-
-Output ONLY the patch, nothing else. Start with "diff --git".
+Begin the patch now:
 """
         return prompt
 
@@ -106,7 +103,8 @@ Output ONLY the patch, nothing else. Start with "diff --git".
                 "max_tokens": 8192,
                 "messages": [
                     {"role": "user", "content": prompt}
-                ]
+                ],
+                "system": "You are a code patch generator. Output ONLY valid git diff patches. Never explain, never add commentary. Your entire response must be a parseable git patch starting with 'diff --git'."
             }
 
             # Only add temperature for official Anthropic API
