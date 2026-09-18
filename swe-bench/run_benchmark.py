@@ -47,7 +47,7 @@ class SWEBenchRunner:
         )
 
         # Create results directory
-        self.results_dir.mkdir(exist_ok=True)
+        self.results_dir.mkdir(exist_ok=True, parents=True)
 
         console.print(f"[dim]Working directory: {self.work_dir}[/dim]")
 
@@ -71,22 +71,27 @@ class SWEBenchRunner:
         base_commit = task.get("base_commit", "")
         hints_text = task.get("hints_text", "")
 
-        prompt = f"""You are an expert software engineer tasked with fixing a bug in the {repo} repository.
+        prompt = f"""You are an expert software engineer. Fix this bug in {repo}.
 
-**Problem Description:**
+**Problem:**
 {problem_statement}
 
 **Repository:** {repo}
 **Base Commit:** {base_commit}
-
 {f"**Hints:** {hints_text}" if hints_text else ""}
 
-Please provide a git patch that fixes this issue. Your response should be ONLY the patch in unified diff format, starting with:
-```diff
-diff --git a/path/to/file b/path/to/file
-```
+Generate a git patch in unified diff format. Output MUST start with "diff --git" and follow standard git diff format.
 
-Provide ONLY the patch, no additional explanation.
+Example format:
+diff --git a/file.py b/file.py
+index abc123..def456 100644
+--- a/file.py
++++ b/file.py
+@@ -10,7 +10,7 @@ def example():
+-    old line
++    new line
+
+Output ONLY the patch, nothing else. Start with "diff --git".
 """
         return prompt
 
@@ -118,6 +123,10 @@ Provide ONLY the patch, no additional explanation.
 
             if not patch:
                 console.print(f"[yellow]⚠ No valid patch found in response for {task_id}[/yellow]")
+                # Save the full response for debugging
+                debug_file = self.results_dir / f"debug_{task_id}.txt"
+                debug_file.write_text(response_text, encoding="utf-8")
+                console.print(f"[dim]Full response saved to: {debug_file}[/dim]")
                 return None
 
             return {
@@ -145,10 +154,24 @@ Provide ONLY the patch, no additional explanation.
                 end = response.find("```", start)
                 if end == -1:
                     end = len(response)
-                return response[start:end].strip()
+                patch = response[start:end].strip()
+            elif "```" in response and response.find("```") < response.find("diff --git"):
+                # Code block before diff
+                start = response.find("diff --git")
+                end = response.find("```", start)
+                if end == -1:
+                    end = len(response)
+                patch = response[start:end].strip()
             else:
                 start = response.find("diff --git")
-                return response[start:].strip()
+                patch = response[start:].strip()
+
+            # Validate patch has required elements
+            if patch and ("@@" in patch or "index" in patch):
+                return patch
+
+        # If no valid patch found, save response for debugging
+        console.print(f"[yellow]Debug: Response preview: {response[:200]}...[/yellow]")
         return None
 
     def apply_patch_and_test(self, task: Dict, patch: str) -> Dict:
