@@ -34,14 +34,13 @@ def main():
     env["ANTHROPIC_API_KEY"] = api_key
     env["ANTHROPIC_BASE_URL"] = base_url
 
-    # Build SWE-agent command
+    # Build SWE-agent command for batch mode
     cmd = [
-        "python", "/swe-agent/run.py",
-        "--model_name", model,
-        "--data_path", "princeton-nlp/SWE-bench_Lite",
-        "--split", "test",
-        "--instance_filter", f"0:{num_tasks}",  # Run first N tasks
-        "--config_file", "/app/config/default.yaml",
+        "sweagent", "run",
+        "--agent.model.name", model,
+        "--agent.model.per_instance_cost_limit", "10.0",
+        "--instances.source", "princeton-nlp/SWE-bench_Lite",
+        "--instances.slice", f":{num_tasks}",  # First N instances
         "--output_dir", "/app/results"
     ]
 

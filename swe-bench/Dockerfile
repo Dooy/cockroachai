@@ -8,12 +8,8 @@ RUN apt-get update && apt-get install -y \
     docker.io \
     && rm -rf /var/lib/apt/lists/*
 
-# Clone official SWE-agent
-RUN git clone https://github.com/princeton-nlp/SWE-agent.git /swe-agent
-
-# Install SWE-agent dependencies
-WORKDIR /swe-agent
-RUN pip install --no-cache-dir -e .
+# Install official SWE-agent
+RUN pip install --no-cache-dir sweagent
 
 # Copy our wrapper script
 WORKDIR /app

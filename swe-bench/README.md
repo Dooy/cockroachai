@@ -2,14 +2,16 @@
 
 使用官方 [SWE-agent](https://github.com/princeton-nlp/SWE-agent) + claude-opus-5 运行 SWE-bench Lite 测试。
 
+📖 **快速开始**: [QUICKSTART.md](QUICKSTART.md) | 📦 **部署指南**: [DEPLOY_GUIDE.md](DEPLOY_GUIDE.md)
+
 ## 架构
 
 ```
 ┌─────────────────────────────────────────┐
 │  Docker Container                       │
 │  ┌───────────────────────────────────┐  │
-│  │  Official SWE-agent               │  │
-│  │  (克隆自 Princeton)               │  │
+│  │  Official SWE-agent (pip)         │  │
+│  │  sweagent CLI                     │  │
 │  └───────────────────────────────────┘  │
 │             ↓                           │
 │  ┌───────────────────────────────────┐  │
@@ -37,6 +39,12 @@
 
 ## 快速开始
 
+### 0. 检查项目完整性（可选）
+
+```bash
+./check_project.sh
+```
+
 ### 1. 配置环境变量
 
 ```bash
@@ -52,7 +60,19 @@ MODEL=claude-opus-5
 NUM_TASKS=2
 ```
 
-### 2. 运行
+### 2. 测试配置（可选）
+
+```bash
+./test_setup.sh
+```
+
+检查：
+- Docker 是否安装
+- 环境变量是否配置
+- API 连接是否正常
+- 磁盘和内存是否充足
+
+### 3. 运行
 
 ```bash
 ./deploy.sh
@@ -62,6 +82,16 @@ NUM_TASKS=2
 ```bash
 docker compose build
 docker compose up
+```
+
+实际执行的命令：
+```bash
+sweagent run \
+  --agent.model.name claude-opus-5 \
+  --agent.model.per_instance_cost_limit 10.0 \
+  --instances.source princeton-nlp/SWE-bench_Lite \
+  --instances.slice :2 \
+  --output_dir /app/results
 ```
 
 ## 配置说明
