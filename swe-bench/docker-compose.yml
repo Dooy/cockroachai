@@ -11,5 +11,4 @@ services:
       - MODEL_NAME=${MODEL_NAME:-claude-opus-5}
     volumes:
       - ./results:/app/results
-      - /var/run/docker.sock:/var/run/docker.sock
-    restart: unless-stopped
+    restart: "no"
