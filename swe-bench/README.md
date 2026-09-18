@@ -1,320 +1,197 @@
-# SWE-bench Lite 测试环境
+# SWE-agent with Claude Opus 5 on SWE-bench Lite
 
-基于 Claude Opus 5 的 SWE-bench Lite 完整评估环境，支持补丁生成、应用和测试验证。
+使用官方 [SWE-agent](https://github.com/princeton-nlp/SWE-agent) + claude-opus-5 运行 SWE-bench Lite 测试。
 
-## 功能特性
+## 架构
 
-- 🤖 单模型测试：claude-opus-5
-- ⚙️ 环境变量配置：支持自定义 API Key 和 Base URL
-- 📊 可配置任务数：默认 2 个任务
-- 🐳 Docker 容器化：一键部署
-- 🔍 完整评估流程：
-  - 自动加载 SWE-bench Lite 数据集
-  - 调用 Claude 生成代码补丁
-  - 克隆仓库并应用补丁
-  - 运行测试验证
-- 📈 详细评分指标：
-  - **Patch Generation Rate**: 成功生成补丁的比率
-  - **Patch Apply Rate**: 补丁成功应用的比率
-  - **Resolve Rate**: 测试通过的比率（实际解决问题）
-- 💾 结果保存：JSON 格式输出详细结果和统计
+```
+┌─────────────────────────────────────────┐
+│  Docker Container                       │
+│  ┌───────────────────────────────────┐  │
+│  │  Official SWE-agent               │  │
+│  │  (克隆自 Princeton)               │  │
+│  └───────────────────────────────────┘  │
+│             ↓                           │
+│  ┌───────────────────────────────────┐  │
+│  │  Claude Opus 5                    │  │
+│  │  - 读取文件                        │  │
+│  │  - 编辑文件                        │  │
+│  │  - 搜索代码                        │  │
+│  │  - 运行测试                        │  │
+│  └───────────────────────────────────┘  │
+│             ↓                           │
+│  ┌───────────────────────────────────┐  │
+│  │  测试环境 (Docker-in-Docker)      │  │
+│  │  - 独立的 Python 环境             │  │
+│  │  - 运行实际的 pytest              │  │
+│  └───────────────────────────────────┘  │
+└─────────────────────────────────────────┘
+```
+
+## 特点
+
+✅ **真正的 Agent 模式** - Claude 用工具直接编辑文件，不生成 patch  
+✅ **官方实现** - Princeton 维护的成熟框架  
+✅ **完整隔离** - 每个任务独立的 Docker 环境  
+✅ **自动调试** - Agent 会运行测试并根据失败信息继续修复  
 
 ## 快速开始
 
-### 1. 环境准备
-
-确保 Ubuntu 服务器已安装：
-- Docker
-- Docker Compose (插件版本)
+### 1. 配置环境变量
 
 ```bash
-# 安装 Docker (如果未安装)
-curl -fsSL https://get.docker.com -o get-docker.sh
-sudo sh get-docker.sh
-sudo usermod -aG docker $USER
-
-# 安装 Docker Compose Plugin
-sudo apt-get update
-sudo apt-get install docker-compose-plugin
-
-# 重新登录或执行
-newgrp docker
-```
-
-### 2. 配置环境变量
-
-```bash
-# 复制环境变量模板
 cp .env.example .env
-
-# 编辑 .env 文件
 nano .env
 ```
 
-配置示例：
+填写：
 ```bash
-# Anthropic API Configuration
-ANTHROPIC_API_KEY=sk-ant-xxxxx
+ANTHROPIC_API_KEY=your_key_here
 ANTHROPIC_BASE_URL=https://api.anthropic.com
-
-# Test Configuration
+MODEL=claude-opus-5
 NUM_TASKS=2
-MODEL_NAME=claude-opus-5
-
-# Optional: Results directory
-RESULTS_DIR=./results
 ```
 
-### 3. 运行测试
+### 2. 运行
 
 ```bash
-# 一键部署并运行
 ./deploy.sh
 ```
 
-或者手动运行：
-
+或手动：
 ```bash
-# 构建镜像
 docker compose build
-
-# 启动测试
 docker compose up
 ```
 
 ## 配置说明
 
-### 环境变量
+### [config/default.yaml](config/default.yaml)
 
-| 变量名 | 说明 | 默认值 | 必填 |
-|--------|------|--------|------|
-| `ANTHROPIC_API_KEY` | Anthropic API 密钥 | - | ✅ |
-| `ANTHROPIC_BASE_URL` | API 基础 URL | `https://api.anthropic.com` | ❌ |
-| `NUM_TASKS` | 测试任务数量 | `2` | ❌ |
-| `MODEL_NAME` | 模型名称 | `claude-opus-5` | ❌ |
-| `RESULTS_DIR` | 结果保存目录 | `./results` | ❌ |
+```yaml
+model:
+  name: claude-opus-5
+  temperature: 0.0
+  max_tokens: 4096
 
-## 评估流程
+agent:
+  max_turns: 30          # 每个任务最多 30 轮对话
+  max_cost: 10.0         # 每个任务最多花费 $10
 
-```
-1. 加载数据集
-   └─ 从 HuggingFace 加载 SWE-bench Lite 测试集
-
-2. 生成补丁
-   └─ 调用 Claude API 分析问题并生成 git patch
-
-3. 应用补丁
-   ├─ 克隆目标仓库
-   ├─ 切换到指定的 base commit
-   ├─ 应用生成的补丁
-   └─ 验证补丁是否可以成功应用
-
-4. 运行测试
-   ├─ 应用测试补丁（如果有）
-   ├─ 运行仓库测试
-   └─ 记录测试结果
-
-5. 生成报告
-   └─ 计算各项指标并保存结果
+environment:
+  timeout: 1800          # 每个任务超时 30 分钟
 ```
 
-## 结果输出
+## 结果
 
-测试结果保存在 `./results` 目录下，文件名格式：
-```
-swe_bench_results_YYYYMMDD_HHMMSS.json
-```
-
-### 结果文件结构
-
-```json
-{
-  "metadata": {
-    "model": "claude-opus-5",
-    "num_tasks": 2,
-    "timestamp": "2026-09-18T09:00:00",
-    "total_tokens": {
-      "input": 12450,
-      "output": 28340
-    }
-  },
-  "statistics": {
-    "total": 2,
-    "generated": 2,
-    "applied": 1,
-    "passed": 1
-  },
-  "scores": {
-    "patch_generation_rate": 100.0,
-    "patch_apply_rate": 50.0,
-    "resolve_rate": 50.0
-  },
-  "results": [
-    {
-      "task_id": "django__django-12345",
-      "model": "claude-opus-5",
-      "patch": "diff --git a/file.py...",
-      "full_response": "...",
-      "usage": {
-        "input_tokens": 6225,
-        "output_tokens": 14170
-      },
-      "timestamp": "2026-09-18T09:00:00",
-      "evaluation": {
-        "applied": true,
-        "tests_passed": true,
-        "error": null
-      }
-    }
-  ]
-}
-```
-
-### 评分指标说明
-
-- **Patch Generation Rate**: 模型成功生成有效补丁的任务比例
-- **Patch Apply Rate**: 生成的补丁能够成功应用到代码库的比例
-- **Resolve Rate**: 应用补丁后测试通过的比例（这是最重要的指标，代表真正解决了问题）
-
-## 输出示例
-
-运行时会显示实时进度和彩色输出：
-
-```
-╭──────────────────────────────────────────╮
-│ SWE-bench Lite Evaluation                │
-│ Model: claude-opus-5                     │
-│ Tasks: 2                                 │
-│ Base URL: https://api.anthropic.com      │
-╰──────────────────────────────────────────╯
-
-✓ Loaded 2 tasks from SWE-bench Lite
-
-⠋ django__django-12345 (1/2)
-Generating patch for django__django-12345...
-✓ Patch applied successfully for django__django-12345
-
-📊 Execution Statistics
-┏━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━┓
-┃ Metric                  ┃ Count ┃   Rate ┃
-┡━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━┩
-│ Total Tasks             │     2 │   100% │
-│ Patches Generated       │     2 │ 100.0% │
-│ Patches Applied         │     1 │  50.0% │
-│ Tests Passed            │     1 │  50.0% │
-└─────────────────────────┴───────┴────────┘
-
-🎯 SWE-bench Scores
-┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━┓
-┃ Metric                       ┃   Score ┃
-┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━┩
-│ Patch Generation Rate        │ 100.00% │
-│ Patch Apply Rate             │  50.00% │
-│ Resolve Rate                 │  50.00% │
-└──────────────────────────────┴─────────┘
-
-💰 Token Usage
-┏━━━━━━━━━━━━━━┳━━━━━━━━━┓
-┃ Type         ┃   Count ┃
-┡━━━━━━━━━━━━━━╇━━━━━━━━━┩
-│ Input Tokens │  12,450 │
-│ Output Tokens│  28,340 │
-│ Total Tokens │  40,790 │
-└──────────────┴─────────┘
-```
-
-## 目录结构
-
-```
-swe-bench/
-├── .env.example          # 环境变量模板
-├── .gitignore           # Git 忽略文件
-├── Dockerfile           # Docker 镜像配置
-├── docker-compose.yml   # Docker Compose 配置
-├── requirements.txt     # Python 依赖
-├── run_benchmark.py     # 主测试脚本（完整评估流程）
-├── deploy.sh           # 一键部署脚本
-├── README.md           # 说明文档
-└── results/            # 测试结果目录（自动创建）
-```
-
-## 本地开发
-
-如果需要在本地开发调试：
+结果保存在 `./results/` 目录：
 
 ```bash
-# 创建虚拟环境
-python3 -m venv venv
-source venv/bin/activate  # Linux/Mac
-
-# 安装依赖
-pip install -r requirements.txt
-
-# 设置环境变量
-export ANTHROPIC_API_KEY=sk-ant-xxxxx
-export NUM_TASKS=2
-
-# 运行测试
-python run_benchmark.py
+results/
+├── trajectories/      # 每个任务的完整对话记录
+├── patches/          # 生成的修改（如果成功）
+└── summary.json      # 总体统计
 ```
 
-## 注意事项
-
-1. **API 配额**：确保你的 Anthropic API 账户有足够的配额
-2. **任务数量**：SWE-bench Lite 包含 300 个测试任务，建议从小数量开始测试
-3. **费率限制**：脚本内置了请求间隔（1秒），避免触发 API 限流
-4. **Token 消耗**：每个任务约消耗 6000-10000 tokens，请注意成本
-5. **磁盘空间**：每个任务会克隆一个 git 仓库（临时），确保有足够空间
-6. **网络连接**：需要访问 GitHub 克隆仓库和 HuggingFace 下载数据集
-7. **测试简化**：当前版本使用简化的测试流程，完整的 SWE-bench 需要 Docker 容器隔离
-
-## 性能优化建议
-
-- **并发处理**：修改脚本支持多任务并行处理（注意 API 限流）
-- **缓存仓库**：对常见仓库进行本地缓存，避免重复克隆
-- **Docker 隔离**：使用 Docker 容器运行测试，提高安全性和准确性
-
-## 故障排查
-
-### Docker 权限问题
+查看统计：
 ```bash
-sudo usermod -aG docker $USER
-newgrp docker
+cat results/summary.json | jq '.resolve_rate'
 ```
 
-### API 连接问题
-检查网络连接和 Base URL 配置：
+## SWE-agent 的工作流程
+
+对于每个 SWE-bench 任务：
+
+1. **环境准备**
+   - 克隆指定的 GitHub 仓库
+   - 切换到指定的 commit
+   - 安装依赖
+
+2. **Agent 循环**（最多 30 轮）
+   ```
+   Claude: 我需要先看看问题相关的文件
+   → search_file "separable"
+   
+   Claude: 找到了，让我读取这个文件
+   → open astropy/modeling/separable.py
+   
+   Claude: 问题在 _cstack 函数，我需要修改它
+   → edit 176:195
+   < 旧代码
+   > 新代码
+   
+   Claude: 让我运行测试验证
+   → pytest tests/test_separable.py
+   
+   (如果失败)
+   Claude: 测试失败了，我看看错误信息...继续修复
+   
+   (如果成功)
+   Claude: 测试通过了！
+   → submit
+   ```
+
+3. **评估**
+   - 应用生成的修改
+   - 运行完整的测试套件
+   - 记录是否解决问题
+
+## 与之前 patch 方案的对比
+
+| 特性 | Patch 方案 | SWE-agent 方案 |
+|------|-----------|----------------|
+| 生成方式 | 一次性生成完整 patch | 多轮交互式编辑 |
+| 调试能力 | ❌ 无法调试 | ✅ 可以根据测试结果调试 |
+| 格式问题 | ❌ 容易出现格式错误 | ✅ 直接文件操作，无格式问题 |
+| 成功率 | 低（补丁经常无法应用）| 高（Agent 会重试） |
+| 成本 | 低（单次调用） | 高（多轮对话） |
+
+## 预期表现
+
+根据 SWE-agent 论文：
+- **claude-2.1**: ~12.3% resolve rate  
+- **claude-3-opus**: ~18.4% resolve rate  
+- **claude-opus-5**: 应该更高（未公开数据）
+
+## 成本估算
+
+每个任务约：
+- 10-30 轮对话
+- 每轮 2000-5000 tokens (input)
+- 每轮 500-1500 tokens (output)
+- 总计约 0.5-2 USD/任务
+
+SWE-bench Lite 全集 300 个任务：
+- 预计总成本：$150-600
+
+## 故障排除
+
+### Docker-in-Docker 权限问题
+
+确保 `privileged: true` 已设置，或者挂载 Docker socket：
+```yaml
+volumes:
+  - /var/run/docker.sock:/var/run/docker.sock
+```
+
+### SWE-agent 克隆失败
+
+手动预先克隆：
 ```bash
-curl -I https://api.anthropic.com
+cd swe-bench
+git clone https://github.com/princeton-nlp/SWE-agent.git
+# 修改 Dockerfile 使用本地副本
 ```
 
-### 数据集下载失败
+### API 配置问题
+
+确认环境变量已正确传递：
 ```bash
-# 设置 HuggingFace 镜像（如果在中国）
-export HF_ENDPOINT=https://hf-mirror.com
+docker compose config
 ```
 
-### 查看容器日志
-```bash
-docker compose logs -f
-```
+## 参考
 
-### Git 克隆失败
-确保服务器可以访问 GitHub：
-```bash
-git clone --depth 1 https://github.com/django/django.git test-repo
-```
-
-## 与官方 SWE-bench 的差异
-
-官方 SWE-bench 使用完整的 Docker 容器隔离环境运行测试，本实现为简化版：
-
-- ✅ 支持：数据集加载、补丁生成、补丁应用
-- ⚠️ 简化：测试执行（当前为占位符，不在隔离容器中运行实际测试）
-- 🔄 扩展方向：可以集成 Docker SDK 来运行完整的测试环境
-
-如需完整的测试执行，建议参考官方 SWE-bench 的 Docker 测试床实现。
-
-## License
-
-MIT
+- [SWE-agent GitHub](https://github.com/princeton-nlp/SWE-agent)
+- [SWE-bench 论文](https://arxiv.org/abs/2310.06770)
+- [SWE-agent 论文](https://arxiv.org/abs/2405.15793)

@@ -1,0 +1,53 @@
+# SWE-agent Configuration for Claude Opus 5
+
+# Model settings
+model:
+  name: claude-opus-5
+  temperature: 0.0
+  max_tokens: 4096
+  per_instance_cost_limit: 10.0  # Max $10 per task
+
+# Agent behavior
+agent:
+  max_turns: 30  # Maximum conversation turns per task
+  max_retries: 3  # Retry failed operations
+
+# Environment settings
+environment:
+  timeout: 1800  # 30 minutes per task
+  docker_image: sweagent/swe-agent:latest
+
+# Tools available to the agent
+tools:
+  - search_dir
+  - search_file
+  - find_file
+  - open
+  - goto
+  - scroll_down
+  - scroll_up
+  - edit
+  - create
+  - submit
+
+# Prompt settings
+prompts:
+  system: |
+    You are an autonomous programmer. Your task is to solve the given GitHub issue.
+    You have access to tools to search files, read code, and edit files.
+    Work step-by-step:
+    1. Understand the problem from the issue description
+    2. Search for relevant files
+    3. Read and analyze the code
+    4. Make necessary changes
+    5. Run tests to verify your fix
+    6. Submit when tests pass
+
+  format_error_template: |
+    Your output was not properly formatted. Please follow the tool format exactly:
+
+    ACTION:
+    ```
+    <tool_name>
+    <arguments>
+    ```

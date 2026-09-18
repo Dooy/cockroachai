@@ -1,37 +1,42 @@
 #!/bin/bash
 set -e
 
-echo "=== SWE-bench Lite Deployment Script ==="
-echo ""
+echo "=================================="
+echo "SWE-agent with Claude Opus 5"
+echo "=================================="
 
-# Check if .env exists
+# Check .env file
 if [ ! -f .env ]; then
-    echo "⚠️  .env file not found. Creating from .env.example..."
-    cp .env.example .env
-    echo "✅ Please edit .env file with your API key before continuing."
+    echo "Error: .env file not found!"
+    echo "Please copy .env.example to .env and configure it."
     exit 1
 fi
 
 # Load environment variables
 source .env
 
-# Validate required environment variables
-if [ -z "$ANTHROPIC_API_KEY" ] || [ "$ANTHROPIC_API_KEY" = "your_api_key_here" ]; then
-    echo "❌ Error: ANTHROPIC_API_KEY not set in .env"
+# Validate required variables
+if [ -z "$ANTHROPIC_API_KEY" ]; then
+    echo "Error: ANTHROPIC_API_KEY not set in .env"
     exit 1
 fi
 
-echo "📦 Building Docker image..."
+echo "Model: ${MODEL:-claude-opus-5}"
+echo "Tasks: ${NUM_TASKS:-2}"
+echo ""
+
+# Build and run
+echo "Building Docker image (this may take a while on first run)..."
 docker compose build
 
 echo ""
-echo "🚀 Starting SWE-bench Lite test..."
-echo "Model: $MODEL_NAME"
-echo "Tasks: $NUM_TASKS"
-echo "Base URL: $ANTHROPIC_BASE_URL"
+echo "Starting SWE-agent..."
+echo "This will take a while (each task ~5-15 minutes)..."
 echo ""
 
 docker compose up
 
 echo ""
-echo "✅ Test complete! Check ./results directory for outputs."
+echo "=================================="
+echo "Results saved to ./results/"
+echo "=================================="
