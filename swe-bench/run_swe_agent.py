@@ -30,15 +30,14 @@ def main():
     print(f"🔗 API: {base_url}")
     print()
 
-    # 使用 sweagent CLI（正确的方式）
+    # 使用 SWE-agent 的正确命令
     cmd = [
-        "sweagent", "run",
-        "--model_name", model,
+        "python", "/swe-agent/sweagent/run/run.py",
+        "--model", model,
         "--data_path", "princeton-nlp/SWE-bench_Lite",
         "--split", "test",
         "--instance_filter", f"0:{num_tasks}",
         "--output_dir", str(output_dir),
-        "--per_instance_cost_limit", "10.0",
     ]
 
     # 设置环境变量
