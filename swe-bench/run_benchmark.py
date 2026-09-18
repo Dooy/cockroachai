@@ -95,14 +95,21 @@ Provide ONLY the patch, no additional explanation.
         try:
             console.print(f"[cyan]Generating patch for {task_id}...[/cyan]")
 
-            response = self.client.messages.create(
-                model=self.model,
-                max_tokens=8192,
-                temperature=0.0,
-                messages=[
+            # Prepare API call parameters
+            api_params = {
+                "model": self.model,
+                "max_tokens": 8192,
+                "messages": [
                     {"role": "user", "content": prompt}
                 ]
-            )
+            }
+
+            # Only add temperature for official Anthropic API
+            # Some proxy endpoints don't support this parameter
+            if "anthropic.com" in self.base_url.lower():
+                api_params["temperature"] = 0.0
+
+            response = self.client.messages.create(**api_params)
 
             response_text = response.content[0].text
 
