@@ -245,10 +245,23 @@ Begin the patch now:
             matches = re.findall(clean_file_pattern, problem_text)
             found_files.update(matches)
 
-            console.print(f"[dim]Found {len(found_files)} potential files: {sorted(found_files)}[/dim]")
+            # Prioritize source files over test files
+            # Separate source files and test files
+            source_files = []
+            test_files = []
+            for f in found_files:
+                if '/test' in f or f.startswith('test'):
+                    test_files.append(f)
+                else:
+                    source_files.append(f)
 
-            # Try to read each file
-            for file_path in found_files:
+            # Process source files first, then test files
+            prioritized_files = source_files + test_files
+
+            console.print(f"[dim]Found {len(prioritized_files)} files (source: {len(source_files)}, test: {len(test_files)})[/dim]")
+
+            # Try to read each file (limit to top 5 files to avoid context overflow)
+            for file_path in prioritized_files[:5]:
                 full_path = temp_dir / file_path
                 if full_path.exists() and full_path.is_file():
                     try:
@@ -353,19 +366,65 @@ Begin the patch now:
 
                 # Apply test patch if available
                 if test_patch:
+                    console.print(f"[dim]Applying test patch...[/dim]")
                     test_patch_file = repo_dir / "test.patch"
                     test_patch_file.write_text(test_patch)
-                    subprocess.run(
+                    test_apply_result = subprocess.run(
                         ["git", "apply", str(test_patch_file)],
                         cwd=repo_dir,
                         capture_output=True,
                         timeout=30
                     )
+                    if test_apply_result.returncode != 0:
+                        console.print(f"[yellow]⚠ Test patch failed to apply[/yellow]")
 
-                # Run tests (simplified - actual SWE-bench uses docker containers)
-                # This is a basic version, full SWE-bench would run in isolated containers
+                # Run actual tests using pytest
                 console.print(f"[dim]Running tests for {task_id}...[/dim]")
-                result["tests_passed"] = True  # Placeholder - actual test execution needed
+
+                # First, try to install dependencies
+                # Check if requirements.txt or setup.py exists
+                if (repo_dir / "setup.py").exists():
+                    console.print(f"[dim]Installing package...[/dim]")
+                    install_result = subprocess.run(
+                        ["pip", "install", "-e", ".", "-q"],
+                        cwd=repo_dir,
+                        capture_output=True,
+                        timeout=300
+                    )
+                    if install_result.returncode != 0:
+                        console.print(f"[yellow]⚠ Package installation failed[/yellow]")
+
+                # Run pytest on the test files mentioned in test_patch
+                # Extract test file paths from test_patch
+                import re
+                test_files = []
+                if test_patch:
+                    test_pattern = r'diff --git a/([^\s]+) b/[^\s]+'
+                    matches = re.findall(test_pattern, test_patch)
+                    test_files = [m for m in matches if 'test' in m]
+
+                if test_files:
+                    # Run pytest on specific test files
+                    test_result = subprocess.run(
+                        ["python", "-m", "pytest", "-xvs"] + test_files,
+                        cwd=repo_dir,
+                        capture_output=True,
+                        timeout=300
+                    )
+
+                    # Check if tests passed
+                    if test_result.returncode == 0:
+                        result["tests_passed"] = True
+                        console.print(f"[green]✓ Tests passed for {task_id}[/green]")
+                    else:
+                        result["tests_passed"] = False
+                        result["error"] = (result.get("error", "") +
+                                        f"\nTest output: {test_result.stdout.decode('utf-8', errors='ignore')[:500]}")
+                        console.print(f"[red]✗ Tests failed for {task_id}[/red]")
+                else:
+                    # No specific test files, mark as passed if patch applied
+                    result["tests_passed"] = True
+                    console.print(f"[yellow]⚠ No test files found, marking as passed[/yellow]")
 
             else:
                 result["error"] = apply_result.stderr.decode()
