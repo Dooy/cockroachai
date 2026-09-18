@@ -64,12 +64,19 @@ class SWEBenchRunner:
             console.print("[yellow]Tip: Make sure you have internet connection and datasets library installed[/yellow]")
             sys.exit(1)
 
-    def create_prompt(self, task: Dict) -> str:
+    def create_prompt(self, task: Dict, file_contents: Dict[str, str] = None) -> str:
         """Create prompt for Claude from task"""
         problem_statement = task.get("problem_statement", "")
         repo = task.get("repo", "")
         base_commit = task.get("base_commit", "")
         hints_text = task.get("hints_text", "")
+
+        # Add file contents if provided
+        files_section = ""
+        if file_contents:
+            files_section = "\n\nRelevant file contents:\n"
+            for filepath, content in file_contents.items():
+                files_section += f"\n=== {filepath} ===\n{content}\n"
 
         prompt = f"""Generate a git patch to fix this bug. Output ONLY the patch in standard unified diff format.
 
@@ -80,13 +87,15 @@ Problem:
 {problem_statement}
 
 {f"Hints: {hints_text}" if hints_text else ""}
+{files_section}
 
 Requirements:
 1. Your ENTIRE response must be a valid git patch
-2. Start with: diff --git a/path/to/file b/path/to/file
-3. Include proper diff headers (index, ---, +++, @@)
-4. NO explanations, NO markdown, NO commentary
-5. ONLY the raw patch text
+2. Use actual line numbers and content from the provided files
+3. Start with: diff --git a/path/to/file b/path/to/file
+4. Include proper diff headers (index, ---, +++, @@)
+5. NO explanations, NO markdown, NO commentary
+6. ONLY the raw patch text
 
 Begin the patch now:
 """
@@ -181,6 +190,74 @@ Begin the patch now:
         # If no valid patch found, save response for debugging
         console.print(f"[yellow]Debug: Response preview: {response[:200]}...[/yellow]")
         return None
+
+    def extract_file_contents(self, task: Dict) -> Dict[str, str]:
+        """Extract relevant file contents from repository before generating patch"""
+        task_id = task.get("instance_id", "unknown")
+        repo = task.get("repo", "")
+        base_commit = task.get("base_commit", "")
+
+        file_contents = {}
+        temp_dir = self.work_dir / f"{task_id}_temp"
+
+        try:
+            repo_url = f"https://github.com/{repo}.git"
+
+            # Clone repository
+            subprocess.run(
+                ["git", "clone", "--depth", "1", "--branch", base_commit, repo_url, str(temp_dir)],
+                capture_output=True,
+                timeout=300,
+                check=False
+            )
+
+            # If branch clone failed, try full clone and checkout
+            if not temp_dir.exists() or not (temp_dir / ".git").exists():
+                subprocess.run(
+                    ["git", "clone", repo_url, str(temp_dir)],
+                    capture_output=True,
+                    timeout=600,
+                    check=True
+                )
+                subprocess.run(
+                    ["git", "checkout", base_commit],
+                    cwd=temp_dir,
+                    capture_output=True,
+                    timeout=60,
+                    check=True
+                )
+
+            # Extract file paths from problem statement or hints
+            # Look for common patterns like file paths in the text
+            problem_text = task.get("problem_statement", "") + " " + task.get("hints_text", "")
+
+            # Common file extensions to look for
+            for ext in [".py", ".js", ".java", ".cpp", ".c", ".go"]:
+                import re
+                # Find potential file paths
+                pattern = r'[\w/]+' + re.escape(ext)
+                matches = re.findall(pattern, problem_text)
+
+                for match in matches:
+                    file_path = temp_dir / match
+                    if file_path.exists() and file_path.is_file():
+                        try:
+                            content = file_path.read_text(encoding='utf-8', errors='ignore')
+                            # Limit file content to reasonable size (first 10000 chars)
+                            if len(content) > 10000:
+                                content = content[:10000] + "\n... (truncated)"
+                            file_contents[match] = content
+                        except Exception:
+                            pass
+
+        except Exception as e:
+            console.print(f"[yellow]⚠ Could not extract file contents: {e}[/yellow]")
+        finally:
+            # Cleanup temp directory
+            if temp_dir.exists():
+                shutil.rmtree(temp_dir, ignore_errors=True)
+
+        return file_contents
 
     def apply_patch_and_test(self, task: Dict, patch: str) -> Dict:
         """Apply patch to repository and run tests"""
@@ -332,8 +409,11 @@ Begin the patch now:
                     description=f"[cyan]{task_id}[/cyan] ({idx}/{self.num_tasks})"
                 )
 
-                # Generate patch
-                prompt = self.create_prompt(task)
+                # First, clone repository and extract relevant files
+                file_contents = self.extract_file_contents(task)
+
+                # Generate patch with file contents
+                prompt = self.create_prompt(task, file_contents)
                 generation_result = self.call_claude(prompt, task_id)
 
                 if generation_result:
