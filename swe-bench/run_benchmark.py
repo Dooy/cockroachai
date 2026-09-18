@@ -203,52 +203,79 @@ Begin the patch now:
         try:
             repo_url = f"https://github.com/{repo}.git"
 
-            # Clone repository
+            console.print(f"[dim]Extracting files from {repo}...[/dim]")
+
+            # Clone with full history and checkout specific commit
             subprocess.run(
-                ["git", "clone", "--depth", "1", "--branch", base_commit, repo_url, str(temp_dir)],
+                ["git", "clone", "--quiet", repo_url, str(temp_dir)],
                 capture_output=True,
-                timeout=300,
-                check=False
+                timeout=600,
+                check=True
             )
 
-            # If branch clone failed, try full clone and checkout
-            if not temp_dir.exists() or not (temp_dir / ".git").exists():
-                subprocess.run(
-                    ["git", "clone", repo_url, str(temp_dir)],
-                    capture_output=True,
-                    timeout=600,
-                    check=True
-                )
-                subprocess.run(
-                    ["git", "checkout", base_commit],
-                    cwd=temp_dir,
-                    capture_output=True,
-                    timeout=60,
-                    check=True
-                )
+            subprocess.run(
+                ["git", "checkout", base_commit],
+                cwd=temp_dir,
+                capture_output=True,
+                timeout=60,
+                check=True
+            )
 
-            # Extract file paths from problem statement or hints
-            # Look for common patterns like file paths in the text
-            problem_text = task.get("problem_statement", "") + " " + task.get("hints_text", "")
+            # Extract file paths from problem statement, hints, and test patch
+            problem_text = (task.get("problem_statement", "") + " " +
+                          task.get("hints_text", "") + " " +
+                          task.get("test_patch", ""))
 
-            # Common file extensions to look for
-            for ext in [".py", ".js", ".java", ".cpp", ".c", ".go"]:
-                import re
-                # Find potential file paths
-                pattern = r'[\w/]+' + re.escape(ext)
+            # Find Python files mentioned in the problem
+            import re
+            # Pattern for Python file paths
+            file_patterns = [
+                r'([a-zA-Z0-9_/]+\.py)',  # Basic .py files
+                r'`([^`]+\.py)`',  # Files in backticks
+                r'"([^"]+\.py)"',  # Files in quotes
+            ]
+
+            found_files = set()
+            for pattern in file_patterns:
                 matches = re.findall(pattern, problem_text)
+                found_files.update(matches)
 
-                for match in matches:
-                    file_path = temp_dir / match
-                    if file_path.exists() and file_path.is_file():
-                        try:
-                            content = file_path.read_text(encoding='utf-8', errors='ignore')
-                            # Limit file content to reasonable size (first 10000 chars)
-                            if len(content) > 10000:
-                                content = content[:10000] + "\n... (truncated)"
-                            file_contents[match] = content
-                        except Exception:
-                            pass
+            console.print(f"[dim]Found {len(found_files)} potential files: {found_files}[/dim]")
+
+            # Try to read each file
+            for file_path in found_files:
+                full_path = temp_dir / file_path
+                if full_path.exists() and full_path.is_file():
+                    try:
+                        content = full_path.read_text(encoding='utf-8', errors='ignore')
+                        # Limit to 15000 chars to leave room for prompt
+                        if len(content) > 15000:
+                            # Keep beginning and end
+                            content = content[:12000] + "\n\n... (middle section truncated) ...\n\n" + content[-3000:]
+                        file_contents[file_path] = content
+                        console.print(f"[dim]✓ Extracted {file_path} ({len(content)} chars)[/dim]")
+                    except Exception as e:
+                        console.print(f"[yellow]⚠ Failed to read {file_path}: {e}[/yellow]")
+                else:
+                    console.print(f"[yellow]⚠ File not found: {file_path}[/yellow]")
+
+            # If no files found through pattern matching, try common locations
+            if not file_contents:
+                console.print(f"[yellow]⚠ No files found via patterns, searching repository...[/yellow]")
+                # Search for Python files in common locations
+                for py_file in temp_dir.rglob("*.py"):
+                    if ".git" not in str(py_file) and "test" not in str(py_file).lower():
+                        rel_path = py_file.relative_to(temp_dir)
+                        # Only include files that might be relevant (limit to 3 files)
+                        if len(file_contents) < 3:
+                            try:
+                                content = py_file.read_text(encoding='utf-8', errors='ignore')
+                                if len(content) > 15000:
+                                    content = content[:12000] + "\n\n... (truncated) ...\n\n" + content[-3000:]
+                                file_contents[str(rel_path)] = content
+                                console.print(f"[dim]✓ Extracted {rel_path} ({len(content)} chars)[/dim]")
+                            except Exception:
+                                pass
 
         except Exception as e:
             console.print(f"[yellow]⚠ Could not extract file contents: {e}[/yellow]")
@@ -257,6 +284,7 @@ Begin the patch now:
             if temp_dir.exists():
                 shutil.rmtree(temp_dir, ignore_errors=True)
 
+        console.print(f"[dim]Total files extracted: {len(file_contents)}[/dim]")
         return file_contents
 
     def apply_patch_and_test(self, task: Dict, patch: str) -> Dict:
