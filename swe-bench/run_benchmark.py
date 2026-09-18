@@ -116,7 +116,17 @@ Output ONLY the patch, nothing else. Start with "diff --git".
 
             response = self.client.messages.create(**api_params)
 
-            response_text = response.content[0].text
+            # Extract text from response (handle both TextBlock and ToolUseBlock)
+            response_text = ""
+            for block in response.content:
+                if hasattr(block, 'text'):
+                    response_text += block.text
+                elif hasattr(block, 'type') and block.type == 'text':
+                    response_text += block.text
+
+            if not response_text:
+                console.print(f"[red]✗ No text content in response for {task_id}[/red]")
+                return None
 
             # Extract patch from response
             patch = self.extract_patch(response_text)
