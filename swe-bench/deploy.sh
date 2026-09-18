@@ -22,7 +22,7 @@ if [ -z "$ANTHROPIC_API_KEY" ] || [ "$ANTHROPIC_API_KEY" = "your_api_key_here" ]
 fi
 
 echo "📦 Building Docker image..."
-docker-compose build
+docker compose build
 
 echo ""
 echo "🚀 Starting SWE-bench Lite test..."
@@ -31,7 +31,7 @@ echo "Tasks: $NUM_TASKS"
 echo "Base URL: $ANTHROPIC_BASE_URL"
 echo ""
 
-docker-compose up
+docker compose up
 
 echo ""
 echo "✅ Test complete! Check ./results directory for outputs."

@@ -64,10 +64,10 @@ RESULTS_DIR=./results
 
 ```bash
 # 构建镜像
-docker-compose build
+docker compose build
 
 # 启动测试
-docker-compose up
+docker compose up
 ```
 
 ## 配置说明
