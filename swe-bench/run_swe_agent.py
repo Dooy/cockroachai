@@ -48,7 +48,7 @@ def main():
 
     # 运行 SWE-agent
     try:
-        subprocess.run(cmd, env=env, check=True)
+        result = subprocess.run(cmd, env=env, check=True, capture_output=False)
         print("\n✅ 测试完成！")
         print(f"📁 结果保存在: {output_dir}")
     except subprocess.CalledProcessError as e:
