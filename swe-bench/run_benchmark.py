@@ -78,7 +78,7 @@ class SWEBenchRunner:
             for filepath, content in file_contents.items():
                 files_section += f"\n=== {filepath} ===\n{content}\n"
 
-        prompt = f"""Generate a git patch to fix this bug. Output ONLY the patch in standard unified diff format.
+        prompt = f"""Generate a git patch to fix this bug.
 
 Repository: {repo}
 Base Commit: {base_commit}
@@ -89,16 +89,19 @@ Problem:
 {f"Hints: {hints_text}" if hints_text else ""}
 {files_section}
 
-Requirements:
-1. Your ENTIRE response must be a valid git patch
-2. Use actual line numbers and content from the provided files
-3. Start with: diff --git a/path/to/file b/path/to/file
-4. Include proper diff headers (index, ---, +++, @@)
-5. NO explanations, NO markdown, NO commentary
-6. ONLY the raw patch text
+CRITICAL INSTRUCTIONS:
+- Output ONLY a valid unified diff patch
+- Use actual line numbers and content from the provided files
+- Start with: diff --git a/path/to/file b/path/to/file
+- Do NOT include fake index lines like "index 123456789..987654321"
+- Use this format instead: "index 0000000..0000000 100644" or omit the index line entirely
+- Include proper headers: ---, +++, @@
+- NO explanations before or after the patch
+- NO markdown code blocks
+- NO "Requirements:" or other meta-text
+- Stop immediately after the last line of the patch
 
-Begin the patch now:
-"""
+Output the patch now (start with "diff --git"):"""
         return prompt
 
     def call_claude(self, prompt: str, task_id: str) -> Optional[Dict]:
@@ -164,32 +167,37 @@ Begin the patch now:
     def extract_patch(self, response: str) -> Optional[str]:
         """Extract git patch from Claude's response"""
         # Look for diff markers
-        if "diff --git" in response:
-            # Extract content between ```diff and ``` or from diff --git to end
-            if "```diff" in response:
-                start = response.find("```diff") + 7
-                end = response.find("```", start)
-                if end == -1:
-                    end = len(response)
-                patch = response[start:end].strip()
-            elif "```" in response and response.find("```") < response.find("diff --git"):
-                # Code block before diff
-                start = response.find("diff --git")
-                end = response.find("```", start)
-                if end == -1:
-                    end = len(response)
-                patch = response[start:end].strip()
-            else:
-                start = response.find("diff --git")
-                patch = response[start:].strip()
+        if "diff --git" not in response:
+            return None
 
-            # Validate patch has required elements
-            if patch and ("@@" in patch or "index" in patch):
-                return patch
+        # Find the start of the patch
+        start = response.find("diff --git")
 
-        # If no valid patch found, save response for debugging
-        console.print(f"[yellow]Debug: Response preview: {response[:200]}...[/yellow]")
-        return None
+        # Find the end of the patch (before any trailing text)
+        # Common endings: "Requirements:", empty lines at the end, or just end of text
+        patch = response[start:]
+
+        # Clean up: remove any trailing requirements/instructions that leaked through
+        for stop_marker in ["\nRequirements:", "\n\nRequirements:", "Requirements:", "\n\n\n\n"]:
+            if stop_marker in patch:
+                patch = patch[:patch.find(stop_marker)]
+
+        # Remove code block markers if present
+        patch = patch.replace("```diff", "").replace("```", "")
+
+        # Clean trailing whitespace
+        patch = patch.rstrip()
+
+        # Validate it's a proper patch
+        if not patch.startswith("diff --git"):
+            return None
+
+        # Fix fake index lines
+        import re
+        # Replace fake index lines like "index 123456789..987654321" with valid ones
+        patch = re.sub(r'index [0-9a-f]{9,}\.\.[0-9a-f]{9,}', 'index 0000000..0000000', patch)
+
+        return patch
 
     def extract_file_contents(self, task: Dict) -> Dict[str, str]:
         """Extract relevant file contents from repository before generating patch"""
