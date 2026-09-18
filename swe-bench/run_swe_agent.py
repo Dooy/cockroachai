@@ -32,7 +32,7 @@ def main():
 
     # 使用 SWE-agent 的正确命令
     cmd = [
-        "python", "/swe-agent/sweagent/run/run.py",
+        "python", "/swe-agent/sweagent/run/run.py", "run",
         "--model", model,
         "--data_path", "princeton-nlp/SWE-bench_Lite",
         "--split", "test",
