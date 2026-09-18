@@ -196,26 +196,48 @@ Begin the patch now:
         }
 
         try:
-            # Clone repository
+            # Clone repository with full history (not shallow)
             repo_dir = self.work_dir / task_id
             repo_url = f"https://github.com/{repo}.git"
 
             console.print(f"[dim]Cloning {repo}...[/dim]")
             subprocess.run(
-                ["git", "clone", "--depth", "1", repo_url, str(repo_dir)],
+                ["git", "clone", repo_url, str(repo_dir)],
                 check=True,
                 capture_output=True,
-                timeout=300
+                timeout=600
             )
 
             # Checkout base commit
-            subprocess.run(
+            console.print(f"[dim]Checking out {base_commit[:8]}...[/dim]")
+            checkout_result = subprocess.run(
                 ["git", "checkout", base_commit],
                 cwd=repo_dir,
-                check=True,
                 capture_output=True,
                 timeout=60
             )
+
+            if checkout_result.returncode != 0:
+                error_msg = checkout_result.stderr.decode('utf-8', errors='ignore')
+                result["error"] = f"Git checkout failed: {error_msg}"
+                console.print(f"[yellow]⚠ Checkout failed, trying to fetch commit...[/yellow]")
+
+                # Try to fetch the specific commit
+                subprocess.run(
+                    ["git", "fetch", "origin", base_commit],
+                    cwd=repo_dir,
+                    capture_output=True,
+                    timeout=120
+                )
+
+                # Try checkout again
+                subprocess.run(
+                    ["git", "checkout", base_commit],
+                    cwd=repo_dir,
+                    check=True,
+                    capture_output=True,
+                    timeout=60
+                )
 
             # Apply the generated patch
             patch_file = repo_dir / "generated.patch"
