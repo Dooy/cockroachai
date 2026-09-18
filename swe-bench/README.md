@@ -175,7 +175,7 @@ curl -I https://api.anthropic.com
 
 ### 查看容器日志
 ```bash
-docker-compose logs -f
+docker compose logs -f
 ```
 
 ## License
