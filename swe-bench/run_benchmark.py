@@ -196,6 +196,7 @@ Begin the patch now:
         task_id = task.get("instance_id", "unknown")
         repo = task.get("repo", "")
         base_commit = task.get("base_commit", "")
+        test_patch = task.get("test_patch", "")
 
         file_contents = {}
         temp_dir = self.work_dir / f"{task_id}_temp"
@@ -221,26 +222,30 @@ Begin the patch now:
                 check=True
             )
 
-            # Extract file paths from problem statement, hints, and test patch
-            problem_text = (task.get("problem_statement", "") + " " +
-                          task.get("hints_text", "") + " " +
-                          task.get("test_patch", ""))
-
-            # Find Python files mentioned in the problem
+            # Extract file paths from test_patch (most reliable source)
+            # test_patch shows which files are being tested, these are the relevant files
             import re
-            # Pattern for Python file paths
-            file_patterns = [
-                r'([a-zA-Z0-9_/]+\.py)',  # Basic .py files
-                r'`([^`]+\.py)`',  # Files in backticks
-                r'"([^"]+\.py)"',  # Files in quotes
-            ]
-
             found_files = set()
-            for pattern in file_patterns:
-                matches = re.findall(pattern, problem_text)
+
+            if test_patch:
+                # Find all "diff --git a/path b/path" lines
+                diff_pattern = r'diff --git a/([^\s]+) b/[^\s]+'
+                matches = re.findall(diff_pattern, test_patch)
                 found_files.update(matches)
 
-            console.print(f"[dim]Found {len(found_files)} potential files: {found_files}[/dim]")
+                # Also find "--- a/path" and "+++ b/path" patterns
+                file_pattern = r'(?:---|\+\+\+) [ab]/([^\s]+)'
+                matches = re.findall(file_pattern, test_patch)
+                found_files.update(matches)
+
+            # Also check problem statement for explicit file mentions
+            problem_text = task.get("problem_statement", "")
+            # Pattern: path/to/file.py (without a/ or b/ prefix, not starting with /)
+            clean_file_pattern = r'(?<![/a-zA-Z])([a-zA-Z_][a-zA-Z0-9_/]*\.py)\b'
+            matches = re.findall(clean_file_pattern, problem_text)
+            found_files.update(matches)
+
+            console.print(f"[dim]Found {len(found_files)} potential files: {sorted(found_files)}[/dim]")
 
             # Try to read each file
             for file_path in found_files:
@@ -248,34 +253,14 @@ Begin the patch now:
                 if full_path.exists() and full_path.is_file():
                     try:
                         content = full_path.read_text(encoding='utf-8', errors='ignore')
-                        # Limit to 15000 chars to leave room for prompt
-                        if len(content) > 15000:
+                        # Limit to 20000 chars to leave room for prompt
+                        if len(content) > 20000:
                             # Keep beginning and end
-                            content = content[:12000] + "\n\n... (middle section truncated) ...\n\n" + content[-3000:]
+                            content = content[:15000] + "\n\n... (middle section truncated) ...\n\n" + content[-5000:]
                         file_contents[file_path] = content
                         console.print(f"[dim]✓ Extracted {file_path} ({len(content)} chars)[/dim]")
                     except Exception as e:
                         console.print(f"[yellow]⚠ Failed to read {file_path}: {e}[/yellow]")
-                else:
-                    console.print(f"[yellow]⚠ File not found: {file_path}[/yellow]")
-
-            # If no files found through pattern matching, try common locations
-            if not file_contents:
-                console.print(f"[yellow]⚠ No files found via patterns, searching repository...[/yellow]")
-                # Search for Python files in common locations
-                for py_file in temp_dir.rglob("*.py"):
-                    if ".git" not in str(py_file) and "test" not in str(py_file).lower():
-                        rel_path = py_file.relative_to(temp_dir)
-                        # Only include files that might be relevant (limit to 3 files)
-                        if len(file_contents) < 3:
-                            try:
-                                content = py_file.read_text(encoding='utf-8', errors='ignore')
-                                if len(content) > 15000:
-                                    content = content[:12000] + "\n\n... (truncated) ...\n\n" + content[-3000:]
-                                file_contents[str(rel_path)] = content
-                                console.print(f"[dim]✓ Extracted {rel_path} ({len(content)} chars)[/dim]")
-                            except Exception:
-                                pass
 
         except Exception as e:
             console.print(f"[yellow]⚠ Could not extract file contents: {e}[/yellow]")
