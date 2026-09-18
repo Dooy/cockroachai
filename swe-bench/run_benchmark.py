@@ -255,10 +255,34 @@ Begin the patch now:
                 else:
                     source_files.append(f)
 
-            # Process source files first, then test files
-            prioritized_files = source_files + test_files
+            # For each test file, try to infer the corresponding source file
+            inferred_source_files = []
+            for test_file in test_files:
+                # test_separable.py -> separable.py
+                # tests/test_foo.py -> foo.py
+                if 'test_' in test_file:
+                    source_file = test_file.replace('/tests/', '/').replace('/test/', '/')
+                    source_file = source_file.replace('test_', '')
+                    if source_file not in source_files:
+                        inferred_source_files.append(source_file)
 
-            console.print(f"[dim]Found {len(prioritized_files)} files (source: {len(source_files)}, test: {len(test_files)})[/dim]")
+            # Also check problem statement for module mentions
+            if problem_text:
+                # Look for module/function names that might correspond to files
+                module_pattern = r'`([a-zA-Z_][a-zA-Z0-9_]*)`'
+                modules = re.findall(module_pattern, problem_text)
+                for module in modules:
+                    # Check if any path contains this module name
+                    for test_file in test_files:
+                        dir_path = str(Path(test_file).parent.parent)  # Go up from tests/
+                        potential_source = f"{dir_path}/{module}.py"
+                        if potential_source not in source_files and potential_source not in inferred_source_files:
+                            inferred_source_files.append(potential_source)
+
+            # Combine: inferred sources + explicit sources + test files
+            prioritized_files = inferred_source_files + source_files + test_files
+
+            console.print(f"[dim]Found {len(prioritized_files)} files (inferred: {len(inferred_source_files)}, source: {len(source_files)}, test: {len(test_files)})[/dim]")
 
             # Try to read each file (limit to top 5 files to avoid context overflow)
             for file_path in prioritized_files[:5]:
