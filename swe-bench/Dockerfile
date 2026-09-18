@@ -9,7 +9,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Install official SWE-agent
-RUN pip install --no-cache-dir sweagent
+RUN pip install --no-cache-dir swe-agent
 
 # Copy our wrapper script
 WORKDIR /app

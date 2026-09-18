@@ -1,61 +1,60 @@
+#!/usr/bin/env python3
 """
-SWE-agent wrapper for Claude Opus 5
-Runs official SWE-agent with custom configuration
+SWE-bench Lite 测试脚本
+使用官方 SWE-agent + Claude Opus 5
 """
+
 import os
 import sys
 import subprocess
 from pathlib import Path
-from rich.console import Console
-from rich.panel import Panel
-
-console = Console()
 
 def main():
-    # Get configuration from environment
+    # 从环境变量读取配置
     api_key = os.getenv("ANTHROPIC_API_KEY")
     base_url = os.getenv("ANTHROPIC_BASE_URL", "https://api.anthropic.com")
     model = os.getenv("MODEL", "claude-opus-5")
-    num_tasks = int(os.getenv("NUM_TASKS", "2"))
+    num_tasks = os.getenv("NUM_TASKS", "2")
 
     if not api_key:
-        console.print("[red]Error: ANTHROPIC_API_KEY not set[/red]")
+        print("错误: 缺少 ANTHROPIC_API_KEY 环境变量")
         sys.exit(1)
 
-    console.print(Panel.fit(
-        f"[bold cyan]SWE-agent with {model}[/bold cyan]\n"
-        f"Tasks: {num_tasks}\n"
-        f"Base URL: {base_url}",
-        title="Configuration"
-    ))
+    # 确保输出目录存在
+    output_dir = Path("/app/results")
+    output_dir.mkdir(parents=True, exist_ok=True)
 
-    # Set environment variables for SWE-agent
-    env = os.environ.copy()
-    env["ANTHROPIC_API_KEY"] = api_key
-    env["ANTHROPIC_BASE_URL"] = base_url
+    print(f"🚀 开始测试...")
+    print(f"📦 模型: {model}")
+    print(f"📊 任务数: {num_tasks}")
+    print(f"🔗 API: {base_url}")
+    print()
 
-    # Build SWE-agent command for batch mode
+    # 使用 sweagent CLI（正确的方式）
     cmd = [
         "sweagent", "run",
-        "--agent.model.name", model,
-        "--agent.model.per_instance_cost_limit", "10.0",
-        "--instances.source", "princeton-nlp/SWE-bench_Lite",
-        "--instances.slice", f":{num_tasks}",  # First N instances
-        "--output_dir", "/app/results"
+        "--model_name", model,
+        "--data_path", "princeton-nlp/SWE-bench_Lite",
+        "--split", "test",
+        "--instance_filter", f"0:{num_tasks}",
+        "--output_dir", str(output_dir),
+        "--per_instance_cost_limit", "10.0",
     ]
 
-    console.print(f"\n[yellow]Running command:[/yellow]\n{' '.join(cmd)}\n")
+    # 设置环境变量
+    env = os.environ.copy()
+    env["ANTHROPIC_API_KEY"] = api_key
+    if base_url != "https://api.anthropic.com":
+        env["ANTHROPIC_BASE_URL"] = base_url
 
-    # Run SWE-agent
+    # 运行 SWE-agent
     try:
         subprocess.run(cmd, env=env, check=True)
-        console.print("\n[green]✓ SWE-agent completed successfully[/green]")
+        print("\n✅ 测试完成！")
+        print(f"📁 结果保存在: {output_dir}")
     except subprocess.CalledProcessError as e:
-        console.print(f"\n[red]✗ SWE-agent failed with exit code {e.returncode}[/red]")
-        sys.exit(e.returncode)
-    except KeyboardInterrupt:
-        console.print("\n[yellow]⚠ Interrupted by user[/yellow]")
-        sys.exit(130)
+        print(f"\n❌ 测试失败: {e}")
+        sys.exit(1)
 
 if __name__ == "__main__":
     main()
