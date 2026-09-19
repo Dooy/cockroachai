@@ -66,13 +66,13 @@ fi
 echo -e "\n[Phase 1/2] 正在运行 SWE-agent 产生 Patch..."
 
 # SWE-agent v1.1.0+ 适配修改：
-# - 必须设置 --instances.type swebench (嵌套展开格式: --instances.type=swebench)
+# - 必须设置 --instances.type swe_bench (嵌套展开格式: --instances.type=swe_bench)
 # - 使用 --instances.dataset_name 替代默认读取方式
 sweagent run-batch \
   ${CONFIG_ARG} \
   --agent.model.name "${MODEL_NAME}" \
   --agent.model.api_key "${ANTHROPIC_API_KEY}" \
-  --instances.type "swebench" \
+  --instances.type "swe_bench" \
   --instances.dataset_name "${DATASET_NAME}" \
   --instances.split "${SPLIT}" \
   --instances.slice ":${NUM_INSTANCES}" \
