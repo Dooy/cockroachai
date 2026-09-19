@@ -79,8 +79,8 @@ sweagent run-batch \
   --config "${CONFIG_FILE}" \
   --agent.model.name "${MODEL_NAME}" \
   --agent.model.api_key "${ANTHROPIC_API_KEY}" \
-  --agent.model.per_instance_cost_limit 10.0 \
-  --agent.model.total_cost_limit 50.0 \
+  --agent.model.per_instance_cost_limit 50.0 \
+  --agent.model.total_cost_limit 100.0 \
   --instances.type "swe_bench" \
   --instances.dataset_name "${DATASET_NAME}" \
   --instances.split "${SPLIT}" \
