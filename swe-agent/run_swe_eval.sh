@@ -99,18 +99,35 @@ if [ -z "${PREDS_PATH}" ] || [ ! -f "${PREDS_PATH}" ]; then
     exit 1
 fi
 
-echo "✅ 阶段 1 完成！"
-echo ""
-echo "📊 运行结果："
-echo "   - Exit Status: exit_cost (成本限制退出，但已生成 patch)"
-echo "   - 总成本: $4.21"
-echo "   - Patch 位置: 容器内 /root/swebench/SWE-agent/trajectories/.../preds.json"
-echo ""
-echo "ℹ️  提示: preds.json 文件在远程容器内，如需本地访问，请配置输出目录映射"
-echo ""
-echo "=========================================================="
-echo "🎉 SWE-agent 运行完成！"
-echo "=========================================================="
+# 动态查找最新生成的 preds.json 补丁文件
+PREDS_PATH=$(find /root/swebench/SWE-agent/trajectories -name "preds.json" 2>/dev/null | sort -r | head -n 1)
 
-# 由于 preds.json 在容器内，跳过本地评估阶段
-exit 0
+if [ -z "${PREDS_PATH}" ] || [ ! -f "${PREDS_PATH}" ]; then
+    echo "❌ 阶段 1 失败: 未能搜寻到生成的 preds.json！"
+    echo "提示: 请检查 /root/swebench/SWE-agent/trajectories 目录"
+    exit 1
+fi
+
+echo "✅ 阶段 1 完成！Patch 汇总文件位置: ${PREDS_PATH}"
+
+# ------------------------------------------------------------------------------
+# 4. 第二阶段: 运行 SWE-bench 单元测试校验
+# ------------------------------------------------------------------------------
+echo -e "\n[Phase 2/2] 正在使用 SWE-bench 官方 Evaluation Harness 进行单元测试校验..."
+
+if ! python3 -c "import swebench" &> /dev/null; then
+    echo "ℹ️ 正在安装 swebench 评估依赖包..."
+    pip install swebench -q
+fi
+
+python3 -m swebench.harness.run_evaluation \
+  --dataset_name "${DATASET_NAME}" \
+  --split "${SPLIT}" \
+  --predictions_path "${PREDS_PATH}" \
+  --max_workers ${NUM_WORKERS} \
+  --run_id "eval_${EXP_NAME}"
+
+echo "=========================================================="
+echo "🎉 自动化评测全流程顺利完成！"
+echo "Patch 存储位置: ${PREDS_PATH}"
+echo "=========================================================="
