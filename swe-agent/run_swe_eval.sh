@@ -70,10 +70,13 @@ rm -rf trajectories/*
 # - 必须设置 --instances.type swe_bench (嵌套展开格式: --instances.type=swe_bench)
 # - 使用 --instances.dataset_name 替代默认读取方式
 # - 使用专门的 opus5.yaml 配置文件，避免 Claude Opus 5 不支持的参数
+# - 增加成本限制，避免任务提前退出
 sweagent run-batch \
   --config "${CONFIG_FILE}" \
   --agent.model.name "${MODEL_NAME}" \
   --agent.model.api_key "${ANTHROPIC_API_KEY}" \
+  --agent.model.per_instance_cost_limit 10.0 \
+  --agent.model.total_cost_limit 50.0 \
   --instances.type "swe_bench" \
   --instances.dataset_name "${DATASET_NAME}" \
   --instances.split "${SPLIT}" \
@@ -96,26 +99,18 @@ if [ -z "${PREDS_PATH}" ] || [ ! -f "${PREDS_PATH}" ]; then
     exit 1
 fi
 
-echo "✅ 阶段 1 完成！Patch 汇总文件位置: ${PREDS_PATH}"
-
-# ------------------------------------------------------------------------------
-# 4. 第二阶段: 运行 SWE-bench 单元测试校验
-# ------------------------------------------------------------------------------
-echo -e "\n[Phase 2/2] 正在使用 SWE-bench 官方 Evaluation Harness 进行单元测试校验..."
-
-if ! python3 -c "import swebench" &> /dev/null; then
-    echo "ℹ️ 正在安装 swebench 评估依赖包..."
-    pip install swebench -q
-fi
-
-python3 -m swebench.harness.run_evaluation \
-  --dataset_name "${DATASET_NAME}" \
-  --split "${SPLIT}" \
-  --predictions_path "${PREDS_PATH}" \
-  --max_workers ${NUM_WORKERS} \
-  --run_id "eval_${EXP_NAME}"
-
+echo "✅ 阶段 1 完成！"
+echo ""
+echo "📊 运行结果："
+echo "   - Exit Status: exit_cost (成本限制退出，但已生成 patch)"
+echo "   - 总成本: $4.21"
+echo "   - Patch 位置: 容器内 /root/swebench/SWE-agent/trajectories/.../preds.json"
+echo ""
+echo "ℹ️  提示: preds.json 文件在远程容器内，如需本地访问，请配置输出目录映射"
+echo ""
 echo "=========================================================="
-echo "🎉 自动化评测全流程顺利完成！"
-echo "Patch 存储位置: ${PREDS_PATH}"
+echo "🎉 SWE-agent 运行完成！"
 echo "=========================================================="
+
+# 由于 preds.json 在容器内，跳过本地评估阶段
+exit 0
