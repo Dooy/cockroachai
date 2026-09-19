@@ -1,9 +1,18 @@
 agent:
-  model:
-    name: anthropic/claude-opus-5
-    temperature: 1
-    # Claude Opus 5 不支持 top_p 参数，不要设置
-  templates:
+  # 使用 RetryAgent 配置，支持 API 错误重试
+  type: retry
+  max_retries: 3
+  retry_on_error_types:
+    - "litellm.APIError"
+    - "AnthropicException"
+    - "timeout"
+
+  agent_configs:
+    model:
+      name: anthropic/claude-opus-5
+      temperature: 1
+      # Claude Opus 5 不支持 top_p 参数，不要设置
+    templates:
     instance_template: |
       <uploaded_files>
       {{working_dir}}
