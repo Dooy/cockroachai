@@ -67,7 +67,7 @@ echo -e "\n[Phase 1/2] 正在运行 SWE-agent 产生 Patch..."
 
 # 可选：清理旧的轨迹文件以强制重新运行
 # 如果需要重新运行之前失败的任务，取消下面这行注释
-# rm -rf trajectories/*
+rm -rf trajectories/*
 
 # SWE-agent v1.1.0+ 适配修改：
 # - 必须设置 --instances.type swe_bench (嵌套展开格式: --instances.type=swe_bench)
