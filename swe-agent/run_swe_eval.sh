@@ -14,6 +14,9 @@ export ANTHROPIC_BASE_URL="${ANTHROPIC_BASE_URL:-https://api.anthropic.com}"
 # 若使用自定义中转 API 端点，设置 LiteLLM 环境变量
 export OPENAI_API_BASE="${ANTHROPIC_BASE_URL}"
 
+# Claude Opus 5 不支持 top_p 等参数，设置 LiteLLM 自动忽略不支持的参数
+export LITELLM_DROP_PARAMS="True"
+
 MODEL_NAME="anthropic/claude-opus-5"
 DATASET_NAME="princeton-nlp/SWE-bench_Lite"
 SPLIT="test"
