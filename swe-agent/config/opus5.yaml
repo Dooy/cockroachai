@@ -61,7 +61,6 @@ agent:
     bundles:
       - path: tools/registry
       - path: tools/edit_anthropic
-      - path: tools/review_on_submit_minimal
 
     registry_variables:
       USE_FILEMAP: true
