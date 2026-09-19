@@ -14,11 +14,11 @@ export ANTHROPIC_BASE_URL="${ANTHROPIC_BASE_URL:-https://api.anthropic.com}"
 # 若使用自定义中转 API 端点，设置 LiteLLM 环境变量
 export OPENAI_API_BASE="${ANTHROPIC_BASE_URL}"
 
-MODEL_NAME="anthropic/claude-3-5-sonnet-20241022"
+MODEL_NAME="anthropic/claude-opus-5"
 DATASET_NAME="princeton-nlp/SWE-bench_Lite"
 SPLIT="test"
-NUM_INSTANCES=2
-NUM_WORKERS=2
+NUM_INSTANCES=1
+NUM_WORKERS=1
 
 TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
 EXP_NAME="swe_eval_anthropic_${TIMESTAMP}"
