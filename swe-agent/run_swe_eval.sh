@@ -65,10 +65,13 @@ fi
 # ------------------------------------------------------------------------------
 echo -e "\n[Phase 1/2] 正在运行 SWE-agent 产生 Patch..."
 
+# 可选：清理旧的轨迹文件以强制重新运行
+# 如果需要重新运行之前失败的任务，取消下面这行注释
+# rm -rf trajectories/*
+
 # SWE-agent v1.1.0+ 适配修改：
 # - 必须设置 --instances.type swe_bench (嵌套展开格式: --instances.type=swe_bench)
 # - 使用 --instances.dataset_name 替代默认读取方式
-# - 添加 --skip_existing=False 强制重新运行（覆盖旧的 exit_error 轨迹）
 sweagent run-batch \
   ${CONFIG_ARG} \
   --agent.model.name "${MODEL_NAME}" \
@@ -77,8 +80,7 @@ sweagent run-batch \
   --instances.dataset_name "${DATASET_NAME}" \
   --instances.split "${SPLIT}" \
   --instances.slice ":${NUM_INSTANCES}" \
-  --num_workers ${NUM_WORKERS} \
-  --skip_existing=False
+  --num_workers ${NUM_WORKERS}
 
 # 动态查找最新生成的 preds.json 补丁文件
 # SWE-agent 的输出目录通常在当前目录下的 trajectories/ 或通过参数指定
