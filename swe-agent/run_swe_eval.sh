@@ -68,6 +68,7 @@ echo -e "\n[Phase 1/2] 正在运行 SWE-agent 产生 Patch..."
 # SWE-agent v1.1.0+ 适配修改：
 # - 必须设置 --instances.type swe_bench (嵌套展开格式: --instances.type=swe_bench)
 # - 使用 --instances.dataset_name 替代默认读取方式
+# - 添加 --skip_existing=False 强制重新运行（覆盖旧的 exit_error 轨迹）
 sweagent run-batch \
   ${CONFIG_ARG} \
   --agent.model.name "${MODEL_NAME}" \
@@ -76,13 +77,22 @@ sweagent run-batch \
   --instances.dataset_name "${DATASET_NAME}" \
   --instances.split "${SPLIT}" \
   --instances.slice ":${NUM_INSTANCES}" \
-  --num_workers ${NUM_WORKERS}
+  --num_workers ${NUM_WORKERS} \
+  --skip_existing=False
 
 # 动态查找最新生成的 preds.json 补丁文件
-PREDS_PATH=$(find trajectories -name "preds.json" | sort -r | head -n 1)
+# SWE-agent 的输出目录通常在当前目录下的 trajectories/ 或通过参数指定
+# 如果本地没有 trajectories 目录，说明可能在容器内或其他位置
+if [ -d "trajectories" ]; then
+    PREDS_PATH=$(find trajectories -name "preds.json" 2>/dev/null | sort -r | head -n 1)
+else
+    # 尝试从 SWE-agent 的默认输出位置查找
+    PREDS_PATH=$(find . -name "preds.json" 2>/dev/null | grep -E "trajectories|output" | sort -r | head -n 1)
+fi
 
 if [ -z "${PREDS_PATH}" ] || [ ! -f "${PREDS_PATH}" ]; then
     echo "❌ 阶段 1 失败: 未能搜寻到生成的 preds.json！"
+    echo "提示: 请检查 SWE-agent 的输出目录设置"
     exit 1
 fi
 
