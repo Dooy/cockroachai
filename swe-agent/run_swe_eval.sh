@@ -17,6 +17,10 @@ export OPENAI_API_BASE="${ANTHROPIC_BASE_URL}"
 # Claude Opus 5 不支持 top_p 等参数，设置 LiteLLM 自动忽略不支持的参数
 export LITELLM_DROP_PARAMS="True"
 
+# LiteLLM 重试配置：遇到 API 错误自动重试
+export LITELLM_NUM_RETRIES="3"
+export LITELLM_RETRY_DELAY="2"
+
 MODEL_NAME="anthropic/claude-opus-5"
 DATASET_NAME="princeton-nlp/SWE-bench_Lite"
 SPLIT="test"
