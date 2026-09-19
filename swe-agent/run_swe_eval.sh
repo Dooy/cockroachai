@@ -73,11 +73,13 @@ rm -rf trajectories/*
 # - 必须设置 --instances.type swe_bench (嵌套展开格式: --instances.type=swe_bench)
 # - 使用 --instances.dataset_name 替代默认读取方式
 # - Claude Opus 5 只支持 temperature=1，不支持 temperature=0
+# - Claude Opus 5 不支持 top_p 参数
 sweagent run-batch \
   ${CONFIG_ARG} \
   --agent.model.name "${MODEL_NAME}" \
   --agent.model.api_key "${ANTHROPIC_API_KEY}" \
   --agent.model.temperature 1 \
+  --agent.model.top_p 0.999 \
   --instances.type "swe_bench" \
   --instances.dataset_name "${DATASET_NAME}" \
   --instances.split "${SPLIT}" \
