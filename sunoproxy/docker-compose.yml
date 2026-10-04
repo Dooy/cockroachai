@@ -25,5 +25,6 @@ services:
       - "8404:8404" #管理端口
       - "30005:30005" #端口
       - "30006:30006" #端口
+      - "30007:30007" #端口
     volumes:
       - ./config:/usr/local/etc/haproxy:ro
